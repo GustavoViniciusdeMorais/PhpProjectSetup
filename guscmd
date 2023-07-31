@@ -1,0 +1,9 @@
+#!/usr/bin/env php
+<?php
+
+require './vendor/autoload.php';
+
+use gusstub\gus\console\BaseConsole;
+
+$baseConsole = new BaseConsole();
+$baseConsole->run();

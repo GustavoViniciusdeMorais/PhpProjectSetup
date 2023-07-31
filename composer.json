@@ -1,0 +1,15 @@
+{
+    "name": "gustavo/vinicius",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "gustavo\\vinicius\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gustavo Vinicius Morais"
+        }
+    ],
+    "require": {}
+}
