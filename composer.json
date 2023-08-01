@@ -11,5 +11,8 @@
             "name": "Gustavo Vinicius Morais"
         }
     ],
-    "require": {}
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "^1.6"
+    }
 }
