@@ -14,6 +14,6 @@ $app->get('/', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-$app->get('/posts', 'ListPostsAction');
+$app->get('/posts', ListPostsAction::class);
 
 $app->run();
