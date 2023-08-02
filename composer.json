@@ -14,5 +14,14 @@
     "require": {
         "slim/slim": "4.*",
         "slim/psr7": "^1.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.2",
+        "ramsey/composer-repl": "^1.5"
+    },
+    "config": {
+        "allow-plugins": {
+            "ramsey/composer-repl": true
+        }
     }
 }

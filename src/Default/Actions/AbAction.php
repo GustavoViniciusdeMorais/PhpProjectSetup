@@ -6,6 +6,11 @@ abstract class AbAction
 {
     protected $data;
 
+    public function __invoke()
+    {
+        return $this->execute();
+    }
+
     public function withData($data)
     {
         $this->$data = $data;
