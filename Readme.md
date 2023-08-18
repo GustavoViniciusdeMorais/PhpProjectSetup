@@ -1,5 +1,10 @@
 # Gus PHP Setup Project
 
+### My Nginx PHP container
+```
+https://hub.docker.com/r/gustavovinicius/gusphp
+```
+
 ```
 chmod u+x phpInstall.sh
 
@@ -8,6 +13,14 @@ chmod u+x phpInstall.sh
 composer.sh
 
 composer init
+```
+
+### Troubleshooting commands
+```
+apt-get update
+apt-get install php8.1-mbstring -y
+apt-get install php8.1-xml -y
+composer install
 ```
 
 ### PHP  read-eval-print loop
