@@ -5,4 +5,5 @@ namespace gustavo\vinicius\Domain\Accounts\Repositories;
 interface IAccountRepository
 {
     public function findAll();
+    public function findById(int $id);
 }

@@ -10,6 +10,9 @@ require __DIR__ . '/../vendor/autoload.php';
 
 $app = AppFactory::create();
 
+$app->addRoutingMiddleware();
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+
 $app->get('/', function (Request $request, Response $response, $args) {
     $response->getBody()->write("Gustavo Slim version 4");
     return $response;
@@ -17,6 +20,7 @@ $app->get('/', function (Request $request, Response $response, $args) {
 
 $app->group('/api/v1', function(RouteCollectorProxy $group){
     $group->get('/accounts', [AccountController::class, 'findAll']);
+    $group->get('/accounts/{id}', [AccountController::class, 'findById']);
 }); // add middleware later ->add(new GroupMiddleware());
 
 
