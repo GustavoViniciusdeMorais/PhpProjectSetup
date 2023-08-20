@@ -4,8 +4,9 @@ namespace gustavo\vinicius\Infrastructure\Repositories;
 
 use gustavo\vinicius\Domain\Accounts\Entities\Account;
 use gustavo\vinicius\Domain\Accounts\ValueObjects\Money;
+use gustavo\vinicius\Domain\Accounts\Repositories\IAccountRepository;
 
-class AccountRepository
+class AccountRepository implements IAccountRepository
 {
     // Get data from source (DB, InMemory)
     protected $accounts = [

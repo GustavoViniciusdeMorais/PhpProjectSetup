@@ -5,7 +5,7 @@ namespace gustavo\vinicius\Interfaces\Controllers;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use gustavo\vinicius\Infrastructure\Repositories\AccountRepository;
-use gustavo\vinicius\Interfaces\Responders\JsonResponder;
+use gustavo\vinicius\Interfaces\Presenters\JsonResponder;
 
 class AccountController
 {
