@@ -31,7 +31,7 @@ composer repl
 
 ### GET posts
 ```
-GET http://localhost/posts
+GET http://localhost/api/v1/accounts
 ```
 
-![](imgs/actionDomainResponder.png)
+![](imgs/dddFolderTree.png)
