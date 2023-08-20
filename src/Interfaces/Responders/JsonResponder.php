@@ -1,6 +1,6 @@
 <?php
 
-namespace gustavo\vinicius\Infrastructure\Responders;
+namespace gustavo\vinicius\Interfaces\Responders;
 
 class JsonResponder
 {
