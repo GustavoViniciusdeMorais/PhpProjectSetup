@@ -1,6 +1,6 @@
 <?php
 
-namespace gustavo\vinicius\Default\Responders;
+namespace gustavo\vinicius\Infrastructure\Responders;
 
 class JsonResponder
 {
@@ -9,7 +9,7 @@ class JsonResponder
         'data' => []
     ];
 
-    public static function response($data)
+    public static function response($data = null)
     {
         self::$formattedResponse['data'] = $data;
         return json_encode(self::$formattedResponse);

@@ -3,7 +3,8 @@
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
-use gustavo\vinicius\Posts\Actions\ListPostsAction;
+use Slim\Routing\RouteCollectorProxy;
+use gustavo\vinicius\Infrastructure\Controllers\PostController;
 
 require __DIR__ . '/../vendor/autoload.php';
 
@@ -14,6 +15,9 @@ $app->get('/', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-$app->get('/posts', ListPostsAction::class);
+$app->group('/api/v1', function(RouteCollectorProxy $group){
+    $group->get('/posts', [PostController::class, 'list']);
+}); // add middleware later ->add(new GroupMiddleware());
+
 
 $app->run();
