@@ -1,5 +1,19 @@
 <?php
 
-print_r(json_encode([
-    'Container' => 'PHP'
-]));echo "\n\n";
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Slim\Factory\AppFactory;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+$app = AppFactory::create();
+
+$app->addRoutingMiddleware();
+$errorMiddleware = $app->addErrorMiddleware(true, true, true);
+
+$app->get('/', function (Request $request, Response $response, $args) {
+    $response->getBody()->write("Gustavo Slim version 4");
+    return $response;
+});
+
+$app->run();
