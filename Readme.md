@@ -21,4 +21,3 @@ function foo($a) { ... }
 ```
 Rererences:
 - https://docs.phpdoc.org/guide/references/phpdoc/index.html
-- 
