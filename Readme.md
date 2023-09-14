@@ -10,7 +10,7 @@ composer.sh
 composer init
 ```
 ### PHP Doc Function
-Exempla:
+Example:
 ```php
 /**
  * A short description.
