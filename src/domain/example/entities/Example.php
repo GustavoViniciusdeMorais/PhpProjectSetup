@@ -3,26 +3,18 @@
 class Example
 {
 
-    public function test($num)
+    public function test($num, $secNum)
     {
-        if ($num > 1) {
-            return "Grater than {$num}";
+        $result = 0;
+        if (
+            isset($num)
+            && is_numeric($num)
+            && isset($secNum)
+            && is_numeric($secNum)
+        ) {
+            $result = $num + $secNum;
         }
-        if ($num > 1) {
-            return "Grater than {$num}";
-        }
-        if ($num > 1) {
-            return "Grater than {$num}";
-        }
-        if ($num > 1) {
-            return "Grater than {$num}";
-        }
-        if ($num > 1) {
-            return "Grater than {$num}";
-        }
-        if ($num > 1) {
-            return "Grater than {$num}";
-        }
+        return $result;
     }
 
 }
