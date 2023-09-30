@@ -1,57 +1,111 @@
 version: '3'
 
 services:
-    nginx:
+    customer:
         build:
             context: .
-            dockerfile: ubuntu.dockerfile
+            dockerfile: nginx_php.dockerfile
         ports:
             - 80:80
         volumes:
             - ./:/var/www/html
-        container_name: gusphp
-        # depends_on:
-        #     - mysql
-        #     - mailhog_yii
+        container_name: customer
+        depends_on:
+            - cusbomerdb
+            - kafka
         networks:
-            - gus-php-network
+            microservice-network:
+                ipv4_address: 12.0.0.2
+    
+    product:
+        build:
+            context: .
+            dockerfile: nginx_php.dockerfile
+        ports:
+            - 81:80
+        volumes:
+            - ./:/var/www/html
+        container_name: product
+        depends_on:
+            - productdb
+            - kafka
+        networks:
+            microservice-network:
+                ipv4_address: 12.0.0.2
+    
+    order:
+        build:
+            context: .
+            dockerfile: nginx_php.dockerfile
+        ports:
+            - 82:80
+        volumes:
+            - ./:/var/www/html
+        container_name: order
+        depends_on:
+            - orderdb
+            - kafka
+        networks:
+            microservice-network:
+                ipv4_address: 12.0.0.2
 
-    # mysql:
-    #     image: mysql:5.7
-    #     restart: always
-    #     container_name: craftmysql
-    #     ports:
-    #         - 3306:3306
-    #     environment:
-    #         MYSQL_DATABASE: laravel
-    #         MYSQL_ROOT_PASSWORD: laravel
-    #     volumes:
-    #         - ./dockerDBData:/var/lib/mysql
-    #     networks:
-    #         gus-php-network:
-    #             ipv4_address: 12.0.0.8
+    cusbomerdb:
+        image: mysql:5.7
+        restart: always
+        container_name: cusbomerdb
+        ports:
+            - 3306:3306
+        environment:
+            MYSQL_DATABASE: customer
+            MYSQL_ROOT_PASSWORD: 1234
+        volumes:
+            - ./docker/cusbomerdb:/var/lib/mysql
+        networks:
+            microservice-network:
+                ipv4_address: 12.0.0.3
     
-    # mailhog_yii:
-    #     image: mailhog/mailhog
-    #     container_name: mailhog_yii
-    #     ports:
-    #         - 1025:1025
-    #         - 8025:8025
-    #     networks:
-    #          gus-php-network:
-    #             ipv4_address: 12.0.0.10
+    productdb:
+        image: mongo
+        container_name: productdb
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: gustavo
+        ports:
+            - "27017:27017"
+        volumes:
+            - ./docker/productdb:/data/db
+        networks:
+            microservice-network:
+                ipv4_address: 12.0.0.4
     
-    # redis:
-    #     image: redis
-    #     container_name: redis
-    #     ports:
-    #         - 6379:6379
-    #     networks:
-    #         gus-php-network:
-    #             ipv4_address: 12.0.0.9
+    orderdb:
+        image: mongo
+        container_name: orderdb
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: gustavo
+        ports:
+            - "27018:27017"
+        volumes:
+            - ./docker/orderdb:/data/db
+        networks:
+            microservice-network:
+                ipv4_address: 12.0.0.5
+    
+    kafka:
+        build:
+            context: .
+            dockerfile: kafka.dockerfile
+        ports:
+            - 9092:9092
+        volumes:
+            - ./:/var/www/html
+        container_name: kafka
+        networks:
+            - microservice-network 
 
 networks:
-    gus-php-network:
+    microservice-network:
         driver: bridge
         ipam:
             driver: default
