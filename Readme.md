@@ -31,3 +31,11 @@ Example:
 ```
 Rererences:
 - https://docs.phpdoc.org/guide/getting-started/what-is-a-docblock.html#example
+### Url Encode
+```php
+// Your code here!
+$url = "https://example.com?created>2015-09-01";
+$encodedUrl = urlencode($url);
+
+echo "Encoded URL: " . $encodedUrl;
+```
