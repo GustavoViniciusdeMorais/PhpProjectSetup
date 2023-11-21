@@ -48,7 +48,7 @@ try {
        'message' => $e->getMessage(),
        'file' => $e->getFile(),
        'line' => $e->getLine(),
-       'Detalhes' => $e->getTrace(),
+       'Details' => $e->getTrace(),
    ];
 }
 ```
