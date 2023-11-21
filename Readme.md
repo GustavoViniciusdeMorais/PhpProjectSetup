@@ -39,3 +39,16 @@ $encodedUrl = urlencode($url);
 
 echo "Encoded URL: " . $encodedUrl;
 ```
+### TryCatch
+```sh
+try {
+  # code ...
+} catch (\Exception $e) {
+   $response = [
+       'message' => $e->getMessage(),
+       'file' => $e->getFile(),
+       'line' => $e->getLine(),
+       'Detalhes' => $e->getTrace(),
+   ];
+}
+```
