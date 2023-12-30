@@ -1,4 +1,4 @@
-FROM gustavovinicius/gusphp:latest
+FROM gustavovinicius/gusphp:symfony63
 
 # RUN apt update
 
