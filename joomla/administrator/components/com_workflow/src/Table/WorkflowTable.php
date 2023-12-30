@@ -14,11 +14,8 @@ use Joomla\CMS\Access\Rules;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Table\Table;
-use Joomla\CMS\User\CurrentUserInterface;
-use Joomla\CMS\User\CurrentUserTrait;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\ParameterType;
-use Joomla\Event\DispatcherInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -29,10 +26,8 @@ use Joomla\Event\DispatcherInterface;
  *
  * @since  4.0.0
  */
-class WorkflowTable extends Table implements CurrentUserInterface
+class WorkflowTable extends Table
 {
-    use CurrentUserTrait;
-
     /**
      * Indicates that columns fully support the NULL value in the database
      *
@@ -43,16 +38,15 @@ class WorkflowTable extends Table implements CurrentUserInterface
     protected $_supportNullValue = true;
 
     /**
-     * @param   DatabaseDriver        $db          Database connector object
-     * @param   ?DispatcherInterface  $dispatcher  Event dispatcher for this table
+     * @param   DatabaseDriver  $db  Database connector object
      *
      * @since  4.0.0
      */
-    public function __construct(DatabaseDriver $db, DispatcherInterface $dispatcher = null)
+    public function __construct(DatabaseDriver $db)
     {
         $this->typeAlias = '{extension}.workflow';
 
-        parent::__construct('#__workflows', 'id', $db, $dispatcher);
+        parent::__construct('#__workflows', 'id', $db);
     }
 
     /**
@@ -179,9 +173,9 @@ class WorkflowTable extends Table implements CurrentUserInterface
     public function store($updateNulls = true)
     {
         $date = Factory::getDate();
-        $user = $this->getCurrentUser();
+        $user = Factory::getUser();
 
-        $table = new self($this->getDbo(), $this->getDispatcher());
+        $table = new WorkflowTable($this->getDbo());
 
         if ($this->id) {
             // Existing item
@@ -316,8 +310,8 @@ class WorkflowTable extends Table implements CurrentUserInterface
         // Return the asset id.
         if ($assetId) {
             return $assetId;
+        } else {
+            return parent::_getAssetParentId($table, $id);
         }
-
-        return parent::_getAssetParentId($table, $id);
     }
 }

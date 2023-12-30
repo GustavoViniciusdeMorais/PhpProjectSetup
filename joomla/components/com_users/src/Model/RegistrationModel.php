@@ -27,8 +27,6 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\String\PunycodeHelper;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\User\User;
-use Joomla\CMS\User\UserFactoryAwareInterface;
-use Joomla\CMS\User\UserFactoryAwareTrait;
 use Joomla\CMS\User\UserHelper;
 use Joomla\Database\ParameterType;
 
@@ -41,10 +39,8 @@ use Joomla\Database\ParameterType;
  *
  * @since  1.6
  */
-class RegistrationModel extends FormModel implements UserFactoryAwareInterface
+class RegistrationModel extends FormModel
 {
-    use UserFactoryAwareTrait;
-
     /**
      * @var    object  The user registration data.
      * @since  1.6
@@ -131,7 +127,7 @@ class RegistrationModel extends FormModel implements UserFactoryAwareInterface
         PluginHelper::importPlugin('user');
 
         // Activate the user.
-        $user = $this->getUserFactory()->loadUserById($userId);
+        $user = Factory::getUser($userId);
 
         // Admin activation is on and user is verifying their email
         if (($userParams->get('useractivation') == 2) && !$user->getParam('activate', 0)) {
@@ -175,7 +171,7 @@ class RegistrationModel extends FormModel implements UserFactoryAwareInterface
 
             // Send mail to all users with users creating permissions and receiving system emails
             foreach ($rows as $row) {
-                $usercreator = $this->getUserFactory()->loadUserById($row->id);
+                $usercreator = Factory::getUser($row->id);
 
                 if ($usercreator->authorise('core.create', 'com_users') && $usercreator->authorise('core.manage', 'com_users')) {
                     try {
@@ -280,7 +276,7 @@ class RegistrationModel extends FormModel implements UserFactoryAwareInterface
 
             foreach ($temp as $k => $v) {
                 // Here we could have a grouped field, let's check it
-                if (\is_array($v)) {
+                if (is_array($v)) {
                     $this->data->$k = new \stdClass();
 
                     foreach ($v as $key => $val) {
@@ -548,7 +544,7 @@ class RegistrationModel extends FormModel implements UserFactoryAwareInterface
 
             // Send mail to all superadministrators id
             foreach ($rows as $row) {
-                $usercreator = $this->getUserFactory()->loadUserById($row->id);
+                $usercreator = Factory::getUser($row->id);
 
                 if (!$usercreator->authorise('core.create', 'com_users') || !$usercreator->authorise('core.manage', 'com_users')) {
                     continue;
@@ -601,7 +597,7 @@ class RegistrationModel extends FormModel implements UserFactoryAwareInterface
                 return false;
             }
 
-            if (\count($userids) > 0) {
+            if (count($userids) > 0) {
                 $jdate     = new Date();
                 $dateToSql = $jdate->toSql();
                 $subject   = Text::_('COM_USERS_MAIL_SEND_FAILURE_SUBJECT');
@@ -643,12 +639,10 @@ class RegistrationModel extends FormModel implements UserFactoryAwareInterface
 
         if ($useractivation == 1) {
             return 'useractivate';
-        }
-
-        if ($useractivation == 2) {
+        } elseif ($useractivation == 2) {
             return 'adminactivate';
+        } else {
+            return $user->id;
         }
-
-        return $user->id;
     }
 }

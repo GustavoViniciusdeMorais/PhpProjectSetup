@@ -175,8 +175,7 @@ Joomla = window.Joomla || {};
           }
 
           // Call the modal clear button
-          let clear = document.getElementById(`${formControl}_associations_${languageCode}_clear`);
-          clear = clear || element.querySelector('[data-button-action="clear"]');
+          const clear = document.getElementById(`${formControl}_associations_${languageCode}_clear`);
           if (clear.onclick) {
             clear.onclick();
           } else if (clear.click) {

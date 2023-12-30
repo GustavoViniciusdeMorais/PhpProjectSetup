@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $displayData = [
@@ -19,7 +20,7 @@ $displayData = [
     'icon'       => 'icon-address-book contact',
 ];
 
-$user = $this->getCurrentUser();
+$user = Factory::getApplication()->getIdentity();
 
 if ($user->authorise('core.create', 'com_contact') || count($user->getAuthorisedCategories('com_contact', 'core.create')) > 0) {
     $displayData['createURL'] = 'index.php?option=com_contact&task=contact.add';

@@ -9,12 +9,12 @@
 
 namespace Joomla\CMS\Form;
 
-use Joomla\Filesystem\Path;
+use Joomla\CMS\Filesystem\Path;
 use Joomla\String\Normalise;
 use Joomla\String\StringHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -360,10 +360,10 @@ class FormHelper
 
         // Add the new paths to the stack if not already there.
         foreach ($new as $path) {
-            $path = trim($path);
+            $path = \trim($path);
 
             if (!\in_array($path, $paths)) {
-                array_unshift($paths, $path);
+                \array_unshift($paths, $path);
             }
         }
 

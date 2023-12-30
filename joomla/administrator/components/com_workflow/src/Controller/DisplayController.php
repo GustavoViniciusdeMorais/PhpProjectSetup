@@ -90,8 +90,7 @@ class DisplayController extends BaseController
      * Method to display a view.
      *
      * @param   boolean  $cachable   If true, the view output will be cached
-     * @param   array    $urlparams  An array of safe URL parameters and their variable types.
-     *                   @see        \Joomla\CMS\Filter\InputFilter::clean() for valid values.
+     * @param   array    $urlparams  An array of safe URL parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
      *
      * @return  BaseController|boolean  This object to support chaining.
      *
@@ -104,7 +103,7 @@ class DisplayController extends BaseController
         $id     = $this->input->getInt('id');
 
         // Check for edit form.
-        if (\in_array($view, ['workflow', 'stage', 'transition']) && $layout == 'edit' && !$this->checkEditId('com_workflow.edit.' . $view, $id)) {
+        if (in_array($view, ['workflow', 'stage', 'transition']) && $layout == 'edit' && !$this->checkEditId('com_workflow.edit.' . $view, $id)) {
             // Somehow the person just went to the form - we don't allow that.
             if (!\count($this->app->getMessageQueue())) {
                 $this->setMessage(Text::sprintf('JLIB_APPLICATION_ERROR_UNHELD_ID', $id), 'error');

@@ -13,8 +13,6 @@ use Joomla\Application\AbstractApplication;
 use Joomla\CMS\Application\CLI\CliInput;
 use Joomla\CMS\Application\CLI\CliOutput;
 use Joomla\CMS\Application\CLI\Output\Stdout;
-use Joomla\CMS\Event\Application\AfterExecuteEvent;
-use Joomla\CMS\Event\Application\BeforeExecuteEvent;
 use Joomla\CMS\Extension\ExtensionManagerTrait;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Language;
@@ -28,7 +26,7 @@ use Joomla\Registry\Registry;
 use Joomla\Session\SessionInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -99,19 +97,19 @@ abstract class CliApplication extends AbstractApplication implements DispatcherA
     /**
      * Class constructor.
      *
-     * @param   ?Input                $input       An optional argument to provide dependency injection for the application's
-     *                                             input object.  If the argument is a JInputCli object that object will become
-     *                                             the application's input object, otherwise a default input object is created.
-     * @param   ?Registry             $config      An optional argument to provide dependency injection for the application's
-     *                                             config object.  If the argument is a Registry object that object will become
-     *                                             the application's config object, otherwise a default config object is created.
-     * @param   ?CliOutput            $output      The output handler.
-     * @param   ?CliInput             $cliInput    The CLI input handler.
-     * @param   ?DispatcherInterface  $dispatcher  An optional argument to provide dependency injection for the application's
-     *                                             event dispatcher.  If the argument is a DispatcherInterface object that object will become
-     *                                             the application's event dispatcher, if it is null then the default event dispatcher
-     *                                             will be created based on the application's loadDispatcher() method.
-     * @param   ?Container            $container   Dependency injection container.
+     * @param   Input                $input       An optional argument to provide dependency injection for the application's
+     *                                            input object.  If the argument is a JInputCli object that object will become
+     *                                            the application's input object, otherwise a default input object is created.
+     * @param   Registry             $config      An optional argument to provide dependency injection for the application's
+     *                                            config object.  If the argument is a Registry object that object will become
+     *                                            the application's config object, otherwise a default config object is created.
+     * @param   CliOutput            $output      The output handler.
+     * @param   CliInput             $cliInput    The CLI input handler.
+     * @param   DispatcherInterface  $dispatcher  An optional argument to provide dependency injection for the application's
+     *                                            event dispatcher.  If the argument is a DispatcherInterface object that object will become
+     *                                            the application's event dispatcher, if it is null then the default event dispatcher
+     *                                            will be created based on the application's loadDispatcher() method.
+     * @param   Container            $container   Dependency injection container.
      *
      * @since   1.7.0
      */
@@ -259,19 +257,13 @@ abstract class CliApplication extends AbstractApplication implements DispatcherA
         $this->createExtensionNamespaceMap();
 
         // Trigger the onBeforeExecute event
-        $this->dispatchEvent(
-            'onBeforeExecute',
-            new BeforeExecuteEvent('onBeforeExecute', ['subject' => $this, 'container' => $this->getContainer()])
-        );
+        $this->triggerEvent('onBeforeExecute');
 
         // Perform application routines.
         $this->doExecute();
 
         // Trigger the onAfterExecute event.
-        $this->dispatchEvent(
-            'onAfterExecute',
-            new AfterExecuteEvent('onAfterExecute', ['subject' => $this])
-        );
+        $this->triggerEvent('onAfterExecute');
     }
 
     /**

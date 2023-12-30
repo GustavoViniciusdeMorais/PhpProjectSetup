@@ -18,7 +18,6 @@ use Joomla\CMS\Router\Route;
 /** @var Joomla\CMS\WebAsset\WebAssetManager $wa */
 $wa = $this->document->getWebAssetManager();
 $wa->useScript('multiselect')
-    ->useScript('table.columns')
     ->useScript('com_installer.changelog');
 
 $listOrder = $this->escape($this->state->get('list.ordering'));
@@ -68,7 +67,7 @@ $listDirn  = $this->escape($this->state->get('list.direction'));
                                 <th scope="col" class="d-none d-md-table-cell">
                                     <?php echo Text::_('COM_INSTALLER_CHANGELOG'); ?>
                                 </th>
-                                <th scope="col" class="d-none d-md-table-cell">
+                                <th class="d-none d-md-table-cell">
                                     <?php echo HTMLHelper::_('searchtools.sort', 'COM_INSTALLER_HEADING_FOLDER', 'folder_translated', $listDirn, $listOrder); ?>
                                 </th>
                                 <th scope="col" class="d-none d-md-table-cell">

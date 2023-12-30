@@ -13,7 +13,6 @@ namespace Joomla\Component\Menus\Administrator\View\Menu;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Menu\AdministratorMenuItem;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
 use Joomla\CMS\Router\Route;
 use Joomla\Component\Menus\Administrator\Helper\MenusHelper;
@@ -30,14 +29,14 @@ use Joomla\Component\Menus\Administrator\Helper\MenusHelper;
 class XmlView extends BaseHtmlView
 {
     /**
-     * @var  AdministratorMenuItem[]
+     * @var  \stdClass[]
      *
      * @since  3.8.0
      */
     protected $items;
 
     /**
-     * @var   \Joomla\Registry\Registry
+     * @var    \Joomla\CMS\Object\CMSObject
      *
      * @since  3.8.0
      */
@@ -104,8 +103,8 @@ class XmlView extends BaseHtmlView
     /**
      * Add a child node to the xml
      *
-     * @param   \SimpleXMLElement      $xml   The current XML node which would become the parent to the new node
-     * @param   AdministratorMenuItem  $item  The menuitem object to create the child XML node from
+     * @param   \SimpleXMLElement  $xml   The current XML node which would become the parent to the new node
+     * @param   \stdClass          $item  The menuitem object to create the child XML node from
      *
      * @return  void
      *

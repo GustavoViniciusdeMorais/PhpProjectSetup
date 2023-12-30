@@ -24,8 +24,6 @@ use Joomla\CMS\Form\Form;
 use Joomla\CMS\Helper\ContentHelper as LibraryContentHelper;
 use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Schemaorg\SchemaorgServiceInterface;
-use Joomla\CMS\Schemaorg\SchemaorgServiceTrait;
 use Joomla\CMS\Tag\TagServiceInterface;
 use Joomla\CMS\Tag\TagServiceTrait;
 use Joomla\CMS\Workflow\WorkflowServiceInterface;
@@ -36,7 +34,7 @@ use Joomla\Component\Content\Administrator\Service\HTML\Icon;
 use Psr\Container\ContainerInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -49,7 +47,6 @@ class ContentComponent extends MVCComponent implements
     CategoryServiceInterface,
     FieldsServiceInterface,
     AssociationServiceInterface,
-    SchemaorgServiceInterface,
     WorkflowServiceInterface,
     RouterServiceInterface,
     TagServiceInterface
@@ -58,7 +55,6 @@ class ContentComponent extends MVCComponent implements
     use RouterServiceTrait;
     use HTMLRegistryAwareTrait;
     use WorkflowServiceTrait;
-    use SchemaorgServiceTrait;
     use CategoryServiceTrait, TagServiceTrait {
         CategoryServiceTrait::getTableNameForSection insteadof TagServiceTrait;
         CategoryServiceTrait::getStateColumnForSection insteadof TagServiceTrait;
@@ -185,24 +181,6 @@ class ContentComponent extends MVCComponent implements
     }
 
     /**
-     * Returns valid contexts for schemaorg
-     *
-     * @return  array
-     *
-     * @since  5.0.0
-     */
-    public function getSchemaorgContexts(): array
-    {
-        Factory::getLanguage()->load('com_content', JPATH_ADMINISTRATOR);
-
-        $contexts = [
-            'com_content.article' => Text::_('COM_CONTENT'),
-        ];
-
-        return $contexts;
-    }
-
-    /**
      * Returns valid contexts
      *
      * @return  array
@@ -275,7 +253,7 @@ class ContentComponent extends MVCComponent implements
     {
         $parts = explode('.', $context);
 
-        if (\count($parts) < 2) {
+        if (count($parts) < 2) {
             return '';
         }
 
@@ -285,9 +263,7 @@ class ContentComponent extends MVCComponent implements
 
         if ($modelname === 'article' && Factory::getApplication()->isClient('site')) {
             return 'Form';
-        }
-
-        if ($modelname === 'featured' && Factory::getApplication()->isClient('administrator')) {
+        } elseif ($modelname === 'featured' && Factory::getApplication()->isClient('administrator')) {
             return 'Article';
         }
 
@@ -347,7 +323,7 @@ class ContentComponent extends MVCComponent implements
     public function countTagItems(array $items, string $extension)
     {
         $parts   = explode('.', $extension);
-        $section = \count($parts) > 1 ? $parts[1] : null;
+        $section = count($parts) > 1 ? $parts[1] : null;
 
         $config = (object) [
             'related_tbl'   => ($section === 'category' ? 'categories' : 'content'),

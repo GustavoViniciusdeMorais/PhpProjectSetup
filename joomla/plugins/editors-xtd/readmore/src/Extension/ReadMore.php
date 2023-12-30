@@ -10,11 +10,9 @@
 
 namespace Joomla\Plugin\EditorsXtd\ReadMore\Extension;
 
-use Joomla\CMS\Editor\Button\Button;
-use Joomla\CMS\Event\Editor\EditorButtonsSetupEvent;
 use Joomla\CMS\Language\Text;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\CMSPlugin;
-use Joomla\Event\SubscriberInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -25,77 +23,48 @@ use Joomla\Event\SubscriberInterface;
  *
  * @since  1.5
  */
-final class ReadMore extends CMSPlugin implements SubscriberInterface
+final class ReadMore extends CMSPlugin
 {
     /**
-     * Returns an array of events this subscriber will listen to.
+     * Load the language file on instantiation.
      *
-     * @return array
-     *
-     * @since   5.0.0
+     * @var    boolean
+     * @since  3.1
      */
-    public static function getSubscribedEvents(): array
-    {
-        return ['onEditorButtonsSetup' => 'onEditorButtonsSetup'];
-    }
-
-    /**
-     * @param  EditorButtonsSetupEvent $event
-     * @return void
-     *
-     * @since   5.0.0
-     */
-    public function onEditorButtonsSetup(EditorButtonsSetupEvent $event)
-    {
-        $subject  = $event->getButtonsRegistry();
-        $disabled = $event->getDisabledButtons();
-
-        if (\in_array($this->_name, $disabled)) {
-            return;
-        }
-
-        $this->loadLanguage();
-
-        $button = $this->onDisplay($event->getEditorId());
-        $subject->add($button);
-    }
+    protected $autoloadLanguage = true;
 
     /**
      * Readmore button
      *
      * @param   string  $name  The name of the button to add
      *
-     * @return  Button  $button  A two element array of (imageName, textToInsert)
+     * @return  CMSObject  $button  A two element array of (imageName, textToInsert)
      *
      * @since   1.5
-     *
-     * @deprecated  6.0 Use onEditorButtonsSetup event
      */
     public function onDisplay($name)
     {
-        // Register the asset "editor-button.<button name>", will be loaded by the button layout
-        $this->getApplication()->getDocument()->getWebAssetManager()
-            ->registerScript(
-                'editor-button.' . $this->_name,
-                'com_content/admin-article-readmore.min.js',
-                [],
-                ['type' => 'module'],
-                ['editors', 'joomla.dialog']
-            );
+        $doc = $this->getApplication()->getDocument();
+        $doc->getWebAssetManager()
+            ->registerAndUseScript('com_content.admin-article-readmore', 'com_content/admin-article-readmore.min.js', [], ['defer' => true], ['core']);
 
-        Text::script('PLG_READMORE_ALREADY_EXISTS');
-
-        $button = new Button(
-            $this->_name,
+        // Pass some data to javascript
+        $doc->addScriptOptions(
+            'xtd-readmore',
             [
-                'action'  => 'insert-readmore',
-                'text'    => Text::_('PLG_READMORE_BUTTON_READMORE'),
-                'icon'    => 'arrow-down',
-                'iconSVG' => '<svg viewBox="0 0 32 32" width="24" height="24"><path d="M32 12l-6-6-10 10-10-10-6 6 16 16z"></path></svg>',
-                // This is whole Plugin name, it is needed for keeping backward compatibility
-                'name' => $this->_type . '_' . $this->_name,
+                'exists' => Text::_('PLG_READMORE_ALREADY_EXISTS', true),
             ]
         );
+
+        $button          = new CMSObject();
+        $button->modal   = false;
+        $button->onclick = 'insertReadmore(\'' . $name . '\');return false;';
+        $button->text    = Text::_('PLG_READMORE_BUTTON_READMORE');
+        $button->name    = $this->_type . '_' . $this->_name;
+        $button->icon    = 'arrow-down';
+        $button->iconSVG = '<svg viewBox="0 0 32 32" width="24" height="24"><path d="M32 12l-6-6-10 10-10-10-6 6 16 16z"></path></svg>';
+        $button->link    = '#';
+
         return $button;
     }
 }

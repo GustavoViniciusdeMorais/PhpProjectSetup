@@ -71,7 +71,7 @@ class HtmlView extends BaseHtmlView
     /**
      * The model state
      *
-     * @var  \Joomla\Registry\Registry
+     * @var  \Joomla\CMS\Object\CMSObject
      */
     protected $state;
 

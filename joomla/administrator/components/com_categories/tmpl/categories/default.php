@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -23,7 +24,7 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
-$user      = $this->getCurrentUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $extension = $this->escape($this->state->get('filter.extension'));
 $listOrder = $this->escape($this->state->get('list.ordering'));
@@ -284,7 +285,15 @@ if ($saveOrder && !empty($this->items)) {
                         && $user->authorise('core.edit', $extension)
                         && $user->authorise('core.edit.state', $extension)
                     ) : ?>
-                        <template id="joomla-dialog-batch"><?php echo $this->loadTemplate('batch_body'); ?></template>
+                        <?php echo HTMLHelper::_(
+                            'bootstrap.renderModal',
+                            'collapseModal',
+                            [
+                                'title'  => Text::_('COM_CATEGORIES_BATCH_OPTIONS'),
+                                'footer' => $this->loadTemplate('batch_footer'),
+                            ],
+                            $this->loadTemplate('batch_body')
+                        ); ?>
                     <?php endif; ?>
                 <?php endif; ?>
 

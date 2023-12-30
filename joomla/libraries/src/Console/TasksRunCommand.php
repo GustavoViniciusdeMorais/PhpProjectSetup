@@ -19,7 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -89,9 +89,7 @@ class TasksRunCommand extends AbstractCommand
             $this->ioStyle->writeln('<error>No matching task found!</error>');
 
             return Status::NO_TASK;
-        }
-
-        if (!$records) {
+        } elseif (!$records) {
             $this->ioStyle->writeln('<error>No tasks due!</error>');
 
             return Status::NO_TASK;

@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -24,7 +25,7 @@ $wa->useScript('com_associations.admin-associations-default')
 
 $listOrder        = $this->escape($this->state->get('list.ordering'));
 $listDirn         = $this->escape($this->state->get('list.direction'));
-$canManageCheckin = $this->getCurrentUser()->authorise('core.manage', 'com_checkin');
+$canManageCheckin = Factory::getUser()->authorise('core.manage', 'com_checkin');
 
 $iconStates = [
     -2 => 'icon-trash',

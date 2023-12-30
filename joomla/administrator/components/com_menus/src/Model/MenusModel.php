@@ -45,7 +45,6 @@ class MenusModel extends ListModel
                 'title', 'a.title',
                 'menutype', 'a.menutype',
                 'client_id', 'a.client_id',
-                'ordering', 'a.ordering',
             ];
         }
 
@@ -166,7 +165,6 @@ class MenusModel extends ListModel
                     $db->quoteName('a.title'),
                     $db->quoteName('a.description'),
                     $db->quoteName('a.client_id'),
-                    $db->quoteName('a.ordering'),
                 ]
             )
         )
@@ -211,7 +209,7 @@ class MenusModel extends ListModel
      *
      * @since   1.6
      */
-    protected function populateState($ordering = 'a.ordering', $direction = 'asc')
+    protected function populateState($ordering = 'a.title', $direction = 'asc')
     {
         $search   = $this->getUserStateFromRequest($this->context . '.search', 'filter_search');
         $this->setState('filter.search', $search);
@@ -284,7 +282,11 @@ class MenusModel extends ListModel
         $langCodes = [];
 
         foreach ($languages as $language) {
-            $languageName = $language->metadata['nativeName'] ?? $language->metadata['name'];
+            if (isset($language->metadata['nativeName'])) {
+                $languageName = $language->metadata['nativeName'];
+            } else {
+                $languageName = $language->metadata['name'];
+            }
 
             $langCodes[$language->metadata['tag']] = $languageName;
         }
@@ -306,7 +308,7 @@ class MenusModel extends ListModel
         $mLanguages = $db->setQuery($query)->loadColumn();
 
         // Check if we have a mod_menu module set to All languages or a mod_menu module for each admin language.
-        if (!\in_array('*', $mLanguages) && \count($langMissing = array_diff(array_keys($langCodes), $mLanguages))) {
+        if (!in_array('*', $mLanguages) && count($langMissing = array_diff(array_keys($langCodes), $mLanguages))) {
             return array_intersect_key($langCodes, array_flip($langMissing));
         }
 

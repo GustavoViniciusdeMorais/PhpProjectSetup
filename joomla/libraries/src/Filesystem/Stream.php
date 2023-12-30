@@ -10,11 +10,10 @@
 namespace Joomla\CMS\Filesystem;
 
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Object\LegacyErrorHandlingTrait;
-use Joomla\CMS\Object\LegacyPropertyManagementTrait;
+use Joomla\CMS\Object\CMSObject;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -34,11 +33,8 @@ use Joomla\CMS\Object\LegacyPropertyManagementTrait;
  * @deprecated  4.4 will be removed in 6.0
  *              Use Joomla\Filesystem\Stream instead.
  */
-class Stream
+class Stream extends CMSObject
 {
-    use LegacyErrorHandlingTrait;
-    use LegacyPropertyManagementTrait;
-
     /**
      * File Mode
      *
@@ -1296,11 +1292,11 @@ class Stream
         if (is_uploaded_file($src)) {
             // Make sure it's an uploaded file
             return $this->copy($src, $dest, $context, $usePrefix, $relative);
+        } else {
+            $this->setError(Text::_('JLIB_FILESYSTEM_ERROR_STREAMS_NOT_UPLOADED_FILE'));
+
+            return false;
         }
-
-        $this->setError(Text::_('JLIB_FILESYSTEM_ERROR_STREAMS_NOT_UPLOADED_FILE'));
-
-        return false;
     }
 
     /**

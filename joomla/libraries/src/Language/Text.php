@@ -13,7 +13,7 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -59,7 +59,7 @@ class Text
                 $script = (bool) $jsSafe['script'];
             }
 
-            $jsSafe = !empty($jsSafe['jsSafe']);
+            $jsSafe = \array_key_exists('jsSafe', $jsSafe) ? (bool) $jsSafe['jsSafe'] : false;
         }
 
         if (self::passSprintf($string, $jsSafe, $interpretBackSlashes, $script)) {

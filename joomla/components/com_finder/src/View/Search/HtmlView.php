@@ -10,8 +10,8 @@
 
 namespace Joomla\Component\Finder\Site\View\Search;
 
-use Joomla\CMS\Event\Finder\ResultEvent;
 use Joomla\CMS\Factory;
+use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -25,7 +25,6 @@ use Joomla\CMS\Router\SiteRouterAwareTrait;
 use Joomla\CMS\Uri\Uri;
 use Joomla\Component\Finder\Administrator\Indexer\Query;
 use Joomla\Component\Finder\Site\Helper\FinderHelper;
-use Joomla\Filesystem\Path;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -59,7 +58,7 @@ class HtmlView extends BaseHtmlView implements SiteRouterAwareInterface
     /**
      * The model state
      *
-     * @var  \Joomla\Registry\Registry
+     * @var  \Joomla\CMS\Object\CMSObject
      */
     protected $state;
 
@@ -155,7 +154,7 @@ class HtmlView extends BaseHtmlView implements SiteRouterAwareInterface
         $this->pagination->hideEmptyLimitstart = true;
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -175,17 +174,12 @@ class HtmlView extends BaseHtmlView implements SiteRouterAwareInterface
         }
 
         // Run an event on each result item
-        if (\is_array($this->results)) {
-            $dispatcher = $this->getDispatcher();
-
+        if (is_array($this->results)) {
             // Import Finder plugins
-            PluginHelper::importPlugin('finder', null, true, $dispatcher);
+            PluginHelper::importPlugin('finder');
 
             foreach ($this->results as $result) {
-                $dispatcher->dispatch('onFinderResult', new ResultEvent('onFinderResult', [
-                    'subject' => $result,
-                    'query'   => $this->query,
-                ]));
+                $app->triggerEvent('onFinderResult', [&$result, &$this->query]);
             }
         }
 

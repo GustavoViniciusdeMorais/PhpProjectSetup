@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $displayData = [
@@ -18,7 +19,7 @@ $displayData = [
     'helpURL'    => 'https://docs.joomla.org/Special:MyLanguage/Adding_a_new_article',
 ];
 
-$user = $this->getCurrentUser();
+$user = Factory::getApplication()->getIdentity();
 
 if ($user->authorise('core.create', 'com_content') || count($user->getAuthorisedCategories('com_content', 'core.create')) > 0) {
     $displayData['createURL'] = 'index.php?option=com_content&task=article.add';

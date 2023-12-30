@@ -26,6 +26,14 @@ use Joomla\Router\Route;
 final class Content extends CMSPlugin
 {
     /**
+     * Load the language file on instantiation.
+     *
+     * @var    boolean
+     * @since  4.0.0
+     */
+    protected $autoloadLanguage = true;
+
+    /**
      * Registers com_content's API's routes in the application
      *
      * @param   ApiRouter  &$router  The API Routing object

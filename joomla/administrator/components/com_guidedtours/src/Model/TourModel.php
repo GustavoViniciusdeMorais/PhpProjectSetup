@@ -16,9 +16,7 @@ use Joomla\CMS\Log\Log;
 use Joomla\CMS\MVC\Model\AdminModel;
 use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Plugin\PluginHelper;
-use Joomla\Component\Guidedtours\Administrator\Helper\GuidedtoursHelper;
 use Joomla\Database\ParameterType;
-use Joomla\Registry\Registry;
 use Joomla\Utilities\ArrayHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -187,9 +185,9 @@ class TourModel extends AdminModel
     }
 
     /**
-     * Method to get a single record by id or uid
+     * Method to get a single record.
      *
-     * @param   integer|string  $pk  The id or uid of the tour.
+     * @param   integer  $pk  The id of the primary key.
      *
      * @return  CMSObject|boolean  Object on success, false on failure.
      *
@@ -197,47 +195,16 @@ class TourModel extends AdminModel
      */
     public function getItem($pk = null)
     {
-        $pk    = (!empty($pk)) ? $pk : (int) $this->getState($this->getName() . '.id');
+        Factory::getLanguage()->load('com_guidedtours.sys', JPATH_ADMINISTRATOR);
 
-        $table = $this->getTable();
-        if (\is_integer($pk)) {
-            $result = $table->load((int) $pk);
-        } else {
-            // Attempt to load the row by uid.
-            $result = $table->load([ 'uid' => $pk ]);
+        $result = parent::getItem($pk);
+
+        if (!empty($result->id)) {
+            $result->title_translation       = Text::_($result->title);
+            $result->description_translation = Text::_($result->description);
         }
 
-        // Check for a table object error.
-        if ($result === false) {
-            // If there was no underlying error, then the false means there simply was not a row in the db for this $pk.
-            if (!$table->getError()) {
-                $this->setError(Text::_('JLIB_APPLICATION_ERROR_NOT_EXIST'));
-            } else {
-                $this->setError($table->getError());
-            }
-
-            return false;
-        }
-
-        // Convert to the CMSObject before adding other data.
-        $properties = $table->getProperties(1);
-        $item       = ArrayHelper::toObject($properties, CMSObject::class);
-
-        if (property_exists($item, 'params')) {
-            $registry     = new Registry($item->params);
-            $item->params = $registry->toArray();
-        }
-
-        if (!empty($item->uid)) {
-            GuidedtoursHelper::loadTranslationFiles($item->uid, true);
-        }
-
-        if (!empty($item->id)) {
-            $item->title_translation       = Text::_($item->title);
-            $item->description_translation = Text::_($item->description);
-        }
-
-        return $item;
+        return $result;
     }
 
     /**
@@ -299,11 +266,11 @@ class TourModel extends AdminModel
                         Log::add($error, Log::WARNING, 'jerror');
 
                         return false;
+                    } else {
+                        Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING, 'jerror');
+
+                        return false;
                     }
-
-                    Log::add(Text::_('JLIB_APPLICATION_ERROR_DELETE_NOT_PERMITTED'), Log::WARNING, 'jerror');
-
-                    return false;
                 }
             } else {
                 $this->setError($table->getError());

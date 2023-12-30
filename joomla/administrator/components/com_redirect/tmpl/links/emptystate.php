@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -22,7 +23,7 @@ $displayData = [
     'icon'       => 'icon-map-signs redirect',
 ];
 
-$user = $this->getCurrentUser();
+$user = Factory::getApplication()->getIdentity();
 
 if ($user->authorise('core.create', 'com_redirect')) {
     $displayData['createURL'] = 'index.php?option=com_redirect&task=link.add';

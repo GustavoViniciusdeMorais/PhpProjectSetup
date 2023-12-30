@@ -11,6 +11,7 @@
 defined('_JEXEC') or die;
 
 use Joomla\CMS\Access\Access;
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -23,7 +24,7 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('table.columns')
     ->useScript('multiselect');
 
-$user       = $this->getCurrentUser();
+$user       = Factory::getUser();
 $listOrder  = $this->escape($this->state->get('list.ordering'));
 $listDirn   = $this->escape($this->state->get('list.direction'));
 $saveOrder  = $listOrder == 'a.ordering';
@@ -84,7 +85,7 @@ if ($saveOrder && !empty($this->items)) {
                             $groups = json_decode($item->rules);
 
                             // If this group is super admin and this user is not super admin, $canEdit is false
-                            if (!$this->getCurrentUser()->authorise('core.admin') && $groups && Access::checkGroup($groups[0], 'core.admin')) {
+                            if (!Factory::getUser()->authorise('core.admin') && $groups && Access::checkGroup($groups[0], 'core.admin')) {
                                 $canEdit   = false;
                                 $canChange = false;
                             }

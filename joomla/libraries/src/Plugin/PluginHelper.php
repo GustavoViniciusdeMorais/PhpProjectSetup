@@ -15,7 +15,7 @@ use Joomla\Event\DispatcherAwareInterface;
 use Joomla\Event\DispatcherInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**

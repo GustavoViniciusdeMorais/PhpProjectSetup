@@ -52,7 +52,7 @@ abstract class ToolbarHelper
             $title .= ' - ' . Text::_('JADMINISTRATION');
         }
 
-        $app->getDocument()->setTitle($title);
+        Factory::getDocument()->setTitle($title);
     }
 
     /**
@@ -675,7 +675,7 @@ abstract class ToolbarHelper
         $lang->load('com_contenthistory', JPATH_ADMINISTRATOR, $lang->getTag(), true);
 
         /** @var \Joomla\CMS\Table\ContentType $contentTypeTable */
-        $contentTypeTable = Table::getInstance('ContentType', '\\Joomla\\CMS\\Table\\');
+        $contentTypeTable = Table::getInstance('Contenttype');
         $typeId           = $contentTypeTable->getTypeId($typeAlias);
 
         // Options array for Layout

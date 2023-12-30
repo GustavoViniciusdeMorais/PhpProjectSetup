@@ -11,12 +11,11 @@ namespace Joomla\CMS\Exception;
 
 use Joomla\CMS\Application\CMSApplication;
 use Joomla\CMS\Error\AbstractRenderer;
-use Joomla\CMS\Event\Application\AfterInitialiseDocumentEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Log\Log;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -123,15 +122,6 @@ class ExceptionHandler
             // Reset the document object in the factory, this gives us a clean slate and lets everything render properly
             Factory::$document = $renderer->getDocument();
             Factory::getApplication()->loadDocument(Factory::$document);
-
-            // Trigger the onAfterInitialiseDocument event.
-            $app->getDispatcher()->dispatch(
-                'onAfterInitialiseDocument',
-                new AfterInitialiseDocumentEvent('onAfterInitialiseDocument', [
-                    'subject'  => $app,
-                    'document' => $renderer->getDocument(),
-                ])
-            );
 
             $data = $renderer->render($error);
 

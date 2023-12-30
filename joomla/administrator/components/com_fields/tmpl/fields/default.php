@@ -26,7 +26,7 @@ $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app       = Factory::getApplication();
-$user      = $this->getCurrentUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $context   = $this->escape($this->state->get('filter.context'));
 $component = $this->state->get('filter.component');

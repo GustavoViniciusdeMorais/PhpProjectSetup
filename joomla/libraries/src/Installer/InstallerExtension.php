@@ -12,11 +12,10 @@ namespace Joomla\CMS\Installer;
 use Joomla\CMS\Application\ApplicationHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Log\Log;
-use Joomla\CMS\Object\LegacyErrorHandlingTrait;
-use Joomla\CMS\Object\LegacyPropertyManagementTrait;
+use Joomla\CMS\Object\CMSObject;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -24,11 +23,8 @@ use Joomla\CMS\Object\LegacyPropertyManagementTrait;
  *
  * @since  3.1
  */
-class InstallerExtension
+class InstallerExtension extends CMSObject
 {
-    use LegacyErrorHandlingTrait;
-    use LegacyPropertyManagementTrait;
-
     /**
      * Client ID of the extension
      *

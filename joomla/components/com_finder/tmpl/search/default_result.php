@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
@@ -19,7 +20,7 @@ use Joomla\Component\Finder\Administrator\Indexer\Helper;
 use Joomla\Component\Finder\Administrator\Indexer\Taxonomy;
 use Joomla\String\StringHelper;
 
-$user             = $this->getCurrentUser();
+$user             = Factory::getApplication()->getIdentity();
 $show_description = $this->params->get('show_description', 1);
 
 if ($show_description) {

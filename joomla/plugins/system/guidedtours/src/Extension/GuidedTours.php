@@ -66,17 +66,18 @@ final class GuidedTours extends CMSPlugin implements SubscriberInterface
     /**
      * Constructor
      *
-     * @param   DispatcherInterface  $dispatcher  The object to observe
-     * @param   array                $config      An optional associative array of configuration settings.
-     * @param   boolean              $enabled     An internal flag whether plugin should listen any event.
+     * @param   DispatcherInterface  $subject  The object to observe
+     * @param   array                $config   An optional associative array of configuration settings.
+     * @param   boolean              $enabled  An internal flag whether plugin should listen any event.
      *
      * @since   4.3.0
      */
-    public function __construct(DispatcherInterface $dispatcher, array $config = [], bool $enabled = false)
+    public function __construct($subject, array $config = [], bool $enabled = false)
     {
-        self::$enabled = $enabled;
+        $this->autoloadLanguage = $enabled;
+        self::$enabled          = $enabled;
 
-        parent::__construct($dispatcher, $config);
+        parent::__construct($subject, $config);
     }
 
     /**
@@ -103,19 +104,17 @@ final class GuidedTours extends CMSPlugin implements SubscriberInterface
      */
     public function startTour(Event $event)
     {
-        $tourId  = (int) $this->getApplication()->getInput()->getInt('id');
-        $tourUid = $this->getApplication()->getInput()->getString('uid', '');
-        $tourUid = $tourUid !== '' ? urldecode($tourUid) : '';
+        $tourId = (int) $this->getApplication()->getInput()->getInt('id');
 
-        $tour = null;
-
-        // Load plugin language files
-        $this->loadLanguage();
+        $activeTourId = null;
+        $tour         = null;
 
         if ($tourId > 0) {
             $tour = $this->getTour($tourId);
-        } elseif ($tourUid !== '') {
-            $tour = $this->getTour($tourUid);
+
+            if (!empty($tour->id)) {
+                $activeTourId = $tour->id;
+            }
         }
 
         $event->setArgument('result', $tour ?? new \stdClass());
@@ -137,9 +136,6 @@ final class GuidedTours extends CMSPlugin implements SubscriberInterface
         $user = $app->getIdentity();
 
         if ($user != null && $user->id > 0) {
-            // Load plugin language files
-            $this->loadLanguage();
-
             Text::script('JCANCEL');
             Text::script('PLG_SYSTEM_GUIDEDTOURS_BACK');
             Text::script('PLG_SYSTEM_GUIDEDTOURS_COMPLETE');
@@ -160,15 +156,17 @@ final class GuidedTours extends CMSPlugin implements SubscriberInterface
     /**
      * Get a tour and its steps or null if not found
      *
-     * @param   integer|string  $tourId  The ID or Uid of the tour to load
+     * @param   integer  $tourId  The ID of the tour to load
      *
      * @return null|object
      *
      * @since   4.3.0
      */
-    private function getTour($tourId)
+    private function getTour(int $tourId)
     {
         $app = $this->getApplication();
+
+        $user = $app->getIdentity();
 
         $factory = $app->bootComponent('com_guidedtours')->getMVCFactory();
 
@@ -180,26 +178,7 @@ final class GuidedTours extends CMSPlugin implements SubscriberInterface
 
         $item = $tourModel->getItem($tourId);
 
-        return $this->processTour($item);
-    }
-
-    /**
-     * Return a tour and its steps or null if not found
-     *
-     * @param   TourTable  $item  The tour to load
-     *
-     * @return null|object
-     *
-     * @since   5.0.0
-     */
-    private function processTour($item)
-    {
-        $app = $this->getApplication();
-
-        $user    = $app->getIdentity();
-        $factory = $app->bootComponent('com_guidedtours')->getMVCFactory();
-
-        if (empty($item->id) || $item->published < 1 || !\in_array($item->access, $user->getAuthorisedViewLevels())) {
+        if (empty($item->id) || $item->published < 1 || !in_array($item->access, $user->getAuthorisedViewLevels())) {
             return null;
         }
 
@@ -246,8 +225,6 @@ final class GuidedTours extends CMSPlugin implements SubscriberInterface
             $temp->type             = $this->stepType[$step->type];
             $temp->interactive_type = $this->stepInteractiveType[$step->interactive_type];
             $temp->url              = $step->url;
-            $temp->tour_id          = $step->tour_id;
-            $temp->step_id          = $step->id;
 
             // Replace 'images/' to '../images/' when using an image from /images in backend.
             $temp->description = preg_replace('*src\=\"(?!administrator\/)images/*', 'src="../images/', $temp->description);

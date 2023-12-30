@@ -12,7 +12,6 @@ namespace Joomla\Plugin\Fields\Editor\Extension;
 
 use Joomla\CMS\Form\Form;
 use Joomla\Component\Fields\Administrator\Plugin\FieldsPlugin;
-use Joomla\Event\SubscriberInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -23,7 +22,7 @@ use Joomla\Event\SubscriberInterface;
  *
  * @since  3.7.0
  */
-final class Editor extends FieldsPlugin implements SubscriberInterface
+final class Editor extends FieldsPlugin
 {
     /**
      * Transforms the field into a DOM XML element and appends it as a child on the given parent.

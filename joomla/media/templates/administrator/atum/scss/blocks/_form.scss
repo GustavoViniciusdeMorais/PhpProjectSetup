@@ -5,17 +5,8 @@
 
   &:disabled,
   &[readonly] {
-    background-color: var(--gray-200);
+    background-color: #e8e8e8;
     opacity: 1;
-  }
-
-  @if $enable-dark-mode {
-    @include color-mode(dark) {
-      &:disabled,
-      &[readonly] {
-        background-color: var(--gray-800);
-      }
-    }
   }
 
   &:hover:not(:disabled):not([readonly])::-webkit-file-upload-button,

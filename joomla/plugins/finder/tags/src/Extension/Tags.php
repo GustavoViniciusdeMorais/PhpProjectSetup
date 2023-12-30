@@ -246,23 +246,16 @@ final class Tags extends Adapter
         $item->addInstruction(Indexer::META_CONTEXT, 'author');
         $item->addInstruction(Indexer::META_CONTEXT, 'created_by_alias');
 
-        // Get taxonomies to display
-        $taxonomies = $this->params->get('taxonomies', ['type', 'author', 'language']);
-
         // Add the type taxonomy data.
-        if (\in_array('type', $taxonomies)) {
-            $item->addTaxonomy('Type', 'Tag');
-        }
+        $item->addTaxonomy('Type', 'Tag');
 
         // Add the author taxonomy data.
-        if (\in_array('author', $taxonomies) && (!empty($item->author) || !empty($item->created_by_alias))) {
+        if (!empty($item->author) || !empty($item->created_by_alias)) {
             $item->addTaxonomy('Author', !empty($item->created_by_alias) ? $item->created_by_alias : $item->author);
         }
 
         // Add the language taxonomy data.
-        if (\in_array('language', $taxonomies)) {
-            $item->addTaxonomy('Language', $item->language);
-        }
+        $item->addTaxonomy('Language', $item->language);
 
         // Get content extras.
         Helper::getContentExtras($item);

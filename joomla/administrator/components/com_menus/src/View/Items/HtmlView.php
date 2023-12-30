@@ -10,7 +10,6 @@
 
 namespace Joomla\Component\Menus\Administrator\View\Items;
 
-use Joomla\CMS\Event\Menu\BeforeRenderMenuItemsViewEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\HTML\HTMLHelper;
@@ -57,7 +56,7 @@ class HtmlView extends BaseHtmlView
     /**
      * The model state
      *
-     * @var  \Joomla\Registry\Registry
+     * @var  \Joomla\CMS\Object\CMSObject
      */
     protected $state;
 
@@ -106,7 +105,7 @@ class HtmlView extends BaseHtmlView
         $this->activeFilters = $this->get('ActiveFilters');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 
@@ -220,7 +219,7 @@ class HtmlView extends BaseHtmlView
                             unset($xml);
 
                             // Special case if neither a view nor layout title is found
-                            if (\count($titleParts) == 1) {
+                            if (count($titleParts) == 1) {
                                 $titleParts[] = $vars['view'];
                             }
                         }
@@ -277,9 +276,7 @@ class HtmlView extends BaseHtmlView
         }
 
         // Allow a system plugin to insert dynamic menu types to the list shown in menus:
-        $this->getDispatcher()->dispatch('onBeforeRenderMenuItems', new BeforeRenderMenuItemsViewEvent('onBeforeRenderMenuItems', [
-            'subject' => $this,
-        ]));
+        Factory::getApplication()->triggerEvent('onBeforeRenderMenuItems', [$this]);
 
         parent::display($tpl);
     }

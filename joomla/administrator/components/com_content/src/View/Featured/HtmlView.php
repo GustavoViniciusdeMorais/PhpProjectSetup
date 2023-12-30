@@ -11,6 +11,7 @@
 namespace Joomla\Component\Content\Administrator\View\Featured;
 
 use Joomla\CMS\Component\ComponentHelper;
+use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Multilanguage;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
@@ -50,7 +51,7 @@ class HtmlView extends BaseHtmlView
     /**
      * The model state
      *
-     * @var  \Joomla\Registry\Registry
+     * @var  \Joomla\CMS\Object\CMSObject
      */
     protected $state;
 
@@ -136,7 +137,7 @@ class HtmlView extends BaseHtmlView
     protected function addToolbar()
     {
         $canDo   = ContentHelper::getActions('com_content', 'category', $this->state->get('filter.category_id'));
-        $user    = $this->getCurrentUser();
+        $user    = Factory::getApplication()->getIdentity();
         $toolbar = Toolbar::getInstance();
 
         ToolbarHelper::title(Text::_('COM_CONTENT_FEATURED_TITLE'), 'star featured');

@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $displayData = [
@@ -19,7 +20,7 @@ $displayData = [
     'icon'       => 'icon-bookmark banners',
 ];
 
-$user = $this->getCurrentUser();
+$user = Factory::getApplication()->getIdentity();
 
 if ($user->authorise('core.create', 'com_banners') || count($user->getAuthorisedCategories('com_banners', 'core.create')) > 0) {
     $displayData['createURL'] = 'index.php?option=com_banners&task=banner.add';

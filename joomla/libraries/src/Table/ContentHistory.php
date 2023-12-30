@@ -10,14 +10,11 @@
 namespace Joomla\CMS\Table;
 
 use Joomla\CMS\Factory;
-use Joomla\CMS\User\CurrentUserInterface;
-use Joomla\CMS\User\CurrentUserTrait;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\ParameterType;
-use Joomla\Event\DispatcherInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -25,10 +22,8 @@ use Joomla\Event\DispatcherInterface;
  *
  * @since  3.2
  */
-class ContentHistory extends Table implements CurrentUserInterface
+class ContentHistory extends Table
 {
-    use CurrentUserTrait;
-
     /**
      * Array of object fields to unset from the data object before calculating SHA1 hash. This allows us to detect a meaningful change
      * in the database row using the hash. This can be read from the #__content_types content_history_options column.
@@ -51,14 +46,13 @@ class ContentHistory extends Table implements CurrentUserInterface
     /**
      * Constructor
      *
-     * @param   DatabaseDriver        $db          Database connector object
-     * @param   ?DispatcherInterface  $dispatcher  Event dispatcher for this table
+     * @param   DatabaseDriver  $db  A database connector object
      *
      * @since   3.1
      */
-    public function __construct(DatabaseDriver $db, DispatcherInterface $dispatcher = null)
+    public function __construct(DatabaseDriver $db)
     {
-        parent::__construct('#__history', 'version_id', $db, $dispatcher);
+        parent::__construct('#__history', 'version_id', $db);
         $this->ignoreChanges = [
             'modified_by',
             'modified_user_id',
@@ -85,7 +79,7 @@ class ContentHistory extends Table implements CurrentUserInterface
     public function store($updateNulls = false)
     {
         $this->set('character_count', \strlen($this->get('version_data')));
-        $typeTable = new ContentType($this->getDbo(), $this->getDispatcher());
+        $typeTable = Table::getInstance('ContentType', 'JTable', ['dbo' => $this->getDbo()]);
         $typeAlias = explode('.', $this->item_id);
         array_pop($typeAlias);
         $typeTable->load(['type_alias' => implode('.', $typeAlias)]);
@@ -96,7 +90,7 @@ class ContentHistory extends Table implements CurrentUserInterface
 
         // Modify author and date only when not toggling Keep Forever
         if ($this->get('keep_forever') === null) {
-            $this->set('editor_user_id', $this->getCurrentUser()->id);
+            $this->set('editor_user_id', Factory::getUser()->id);
             $this->set('save_date', Factory::getDate()->toSql());
         }
 

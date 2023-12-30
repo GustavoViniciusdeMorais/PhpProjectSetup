@@ -55,26 +55,23 @@ $wa->useScript('keepalive')
                         </div>
                     <?php else : ?>
                         <table class="table">
-                            <caption class="visually-hidden">
-                                <?php echo Text::_('COM_PRIVACY_HEADING_ACTION_LOG'); ?>
-                            </caption>
                             <thead>
-                                <th scope="col">
+                                <th>
                                     <?php echo Text::_('COM_ACTIONLOGS_ACTION'); ?>
                                 </th>
-                                <th scope="col">
+                                <th>
                                     <?php echo Text::_('COM_ACTIONLOGS_DATE'); ?>
                                 </th>
-                                <th scope="col">
+                                <th>
                                     <?php echo Text::_('COM_ACTIONLOGS_NAME'); ?>
                                 </th>
                             </thead>
                             <tbody>
                                 <?php foreach ($this->actionlogs as $i => $item) : ?>
                                     <tr class="row<?php echo $i % 2; ?>">
-                                        <th scope="row">
+                                        <td>
                                             <?php echo ActionlogsHelper::getHumanReadableLogMessage($item); ?>
-                                        </th>
+                                        </td>
                                         <td>
                                             <?php echo HTMLHelper::_('date', $item->log_date, Text::_('DATE_FORMAT_LC6')); ?>
                                         </td>

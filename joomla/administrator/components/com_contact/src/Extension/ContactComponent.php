@@ -23,8 +23,6 @@ use Joomla\CMS\Fields\FieldsServiceInterface;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\HTML\HTMLRegistryAwareTrait;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Schemaorg\SchemaorgServiceInterface;
-use Joomla\CMS\Schemaorg\SchemaorgServiceTrait;
 use Joomla\CMS\Tag\TagServiceInterface;
 use Joomla\CMS\Tag\TagServiceTrait;
 use Joomla\CMS\User\UserFactoryInterface;
@@ -33,7 +31,7 @@ use Joomla\Component\Contact\Administrator\Service\HTML\Icon;
 use Psr\Container\ContainerInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -45,7 +43,6 @@ class ContactComponent extends MVCComponent implements
     BootableExtensionInterface,
     CategoryServiceInterface,
     FieldsServiceInterface,
-    SchemaorgServiceInterface,
     AssociationServiceInterface,
     RouterServiceInterface,
     TagServiceInterface
@@ -53,7 +50,6 @@ class ContactComponent extends MVCComponent implements
     use AssociationServiceTrait;
     use HTMLRegistryAwareTrait;
     use RouterServiceTrait;
-    use SchemaorgServiceTrait;
     use CategoryServiceTrait, TagServiceTrait {
         CategoryServiceTrait::getTableNameForSection insteadof TagServiceTrait;
         CategoryServiceTrait::getStateColumnForSection insteadof TagServiceTrait;
@@ -155,23 +151,5 @@ class ContactComponent extends MVCComponent implements
     protected function getStateColumnForSection(string $section = null)
     {
         return 'published';
-    }
-
-    /**
-     * Returns valid contexts for schemaorg
-     *
-     * @return  array
-     *
-     * @since  5.0.0
-     */
-    public function getSchemaorgContexts(): array
-    {
-        Factory::getLanguage()->load('com_content', JPATH_ADMINISTRATOR);
-
-        $contexts = [
-            'com_contact.contact' => Text::_('COM_CONTACT'),
-        ];
-
-        return $contexts;
     }
 }

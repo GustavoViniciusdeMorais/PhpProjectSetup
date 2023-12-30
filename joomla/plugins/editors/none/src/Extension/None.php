@@ -75,15 +75,14 @@ final class None extends CMSPlugin
                 'webcomponent.editor-none',
                 'plg_editors_none/joomla-editor-none.min.js',
                 [],
-                ['type' => 'module'],
-                ['editors']
+                ['type' => 'module']
             );
 
         return '<joomla-editor-none>'
             . '<textarea name="' . $name . '" id="' . $id . '" cols="' . $col . '" rows="' . $row
             . '" style="width: ' . $width . '; height: ' . $height . ';"' . $readonly . '>' . $content . '</textarea>'
-            . $this->displayButtons($id, $buttons, $asset, $author)
-            . '</joomla-editor-none>';
+            . '</joomla-editor-none>'
+            . $this->displayButtons($id, $buttons, $asset, $author);
     }
 
     /**
@@ -98,7 +97,7 @@ final class None extends CMSPlugin
      */
     private function displayButtons($name, $buttons, $asset, $author)
     {
-        if (\is_array($buttons) || (\is_bool($buttons) && $buttons)) {
+        if (is_array($buttons) || (is_bool($buttons) && $buttons)) {
             $buttonsEvent = new Event(
                 'getButtons',
                 [

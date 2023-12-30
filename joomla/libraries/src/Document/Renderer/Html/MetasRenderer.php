@@ -10,7 +10,6 @@
 namespace Joomla\CMS\Document\Renderer\Html;
 
 use Joomla\CMS\Document\DocumentRenderer;
-use Joomla\CMS\Event\Application\BeforeCompileHeadEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\TagsHelper;
 use Joomla\CMS\Uri\Uri;
@@ -18,7 +17,7 @@ use Joomla\CMS\WebAsset\WebAssetAttachBehaviorInterface;
 use Joomla\Utilities\ArrayHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -59,17 +58,14 @@ class MetasRenderer extends DocumentRenderer
         }
 
         // Trigger the onBeforeCompileHead event
-        $app->getDispatcher()->dispatch(
-            'onBeforeCompileHead',
-            new BeforeCompileHeadEvent('onBeforeCompileHead', ['subject' => $app, 'document' => $this->_doc])
-        );
+        $app->triggerEvent('onBeforeCompileHead');
 
         // Add Script Options as inline asset
         $scriptOptions = $this->_doc->getScriptOptions();
 
         if ($scriptOptions) {
-            $jsonFlags   = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | (JDEBUG ? JSON_PRETTY_PRINT : 0);
-            $jsonOptions = json_encode($scriptOptions, $jsonFlags);
+            $prettyPrint = (JDEBUG && \defined('JSON_PRETTY_PRINT') ? JSON_PRETTY_PRINT : false);
+            $jsonOptions = json_encode($scriptOptions, $prettyPrint);
             $jsonOptions = $jsonOptions ?: '{}';
 
             $wa->addInlineScript(
@@ -131,8 +127,8 @@ class MetasRenderer extends DocumentRenderer
                 }
 
                 if (is_file($dir . $icon)) {
-                    $urlBase = \in_array($base, [0, 2]) ? Uri::base(true) : Uri::root(true);
-                    $base    = \in_array($base, [0, 2]) ? JPATH_BASE : JPATH_ROOT;
+                    $urlBase = in_array($base, [0, 2]) ? Uri::base(true) : Uri::root(true);
+                    $base    = in_array($base, [0, 2]) ? JPATH_BASE : JPATH_ROOT;
                     $path    = str_replace($base, '', $dir);
                     $path    = str_replace('\\', '/', $path);
                     $this->_doc->addFavicon($urlBase . $path . $icon);

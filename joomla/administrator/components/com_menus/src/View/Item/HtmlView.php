@@ -54,14 +54,14 @@ class HtmlView extends BaseHtmlView
     /**
      * The model state
      *
-     * @var   \Joomla\Registry\Registry
+     * @var   CMSObject
      */
     protected $state;
 
     /**
      * The actions the user is authorised to perform
      *
-     * @var    \Joomla\Registry\Registry
+     * @var    CMSObject
      * @since  3.7.0
      */
     protected $canDo;
@@ -99,14 +99,8 @@ class HtmlView extends BaseHtmlView
         }
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
-        }
-
-        if ($this->getLayout() === 'modalreturn') {
-            parent::display($tpl);
-
-            return;
         }
 
         // If we are forcing a language in modal (used for associations).
@@ -119,13 +113,8 @@ class HtmlView extends BaseHtmlView
             $this->form->setFieldAttribute('parent_id', 'language', '*,' . $forcedLanguage);
         }
 
-        if ($this->getLayout() !== 'modal') {
-            $this->addToolbar();
-        } else {
-            $this->addModalToolbar();
-        }
-
         parent::display($tpl);
+        $this->addToolbar();
     }
 
     /**
@@ -142,7 +131,7 @@ class HtmlView extends BaseHtmlView
 
         $user       = $this->getCurrentUser();
         $isNew      = ($this->item->id == 0);
-        $checkedOut = !(\is_null($this->item->checked_out) || $this->item->checked_out == $user->get('id'));
+        $checkedOut = !(is_null($this->item->checked_out) || $this->item->checked_out == $user->get('id'));
         $canDo      = $this->canDo;
         $clientId   = $this->state->get('item.client_id', 0);
         $toolbar    = Toolbar::getInstance();
@@ -215,35 +204,5 @@ class HtmlView extends BaseHtmlView
         }
 
         $toolbar->help($help->key, $help->local, $url);
-    }
-
-    /**
-     * Add the modal toolbar.
-     *
-     * @return  void
-     *
-     * @since   5.0.0
-     *
-     * @throws  \Exception
-     */
-    protected function addModalToolbar()
-    {
-        $user       = $this->getCurrentUser();
-        $isNew      = ($this->item->id == 0);
-        $checkedOut = !(\is_null($this->item->checked_out) || $this->item->checked_out == $user->get('id'));
-        $canDo      = $this->canDo;
-        $toolbar    = Toolbar::getInstance();
-
-        ToolbarHelper::title(Text::_($isNew ? 'COM_MENUS_VIEW_NEW_ITEM_TITLE' : 'COM_MENUS_VIEW_EDIT_ITEM_TITLE'), 'list menu-add');
-
-        $canSave = !$checkedOut && ($isNew && $canDo->get('core.create') || $canDo->get('core.edit'));
-
-        // For new records, check the create permission.
-        if ($canSave) {
-            $toolbar->apply('item.apply');
-            $toolbar->save('item.save');
-        }
-
-        $toolbar->cancel('item.cancel');
     }
 }

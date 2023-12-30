@@ -16,14 +16,12 @@ use Joomla\CMS\Factory as CmsFactory;
 use Joomla\CMS\Filter\InputFilter;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\Language\Text;
-use Joomla\CMS\Toolbar\Toolbar;
-use Joomla\CMS\Toolbar\ToolbarFactoryInterface;
 use Joomla\CMS\Uri\Uri;
 use Joomla\CMS\Utility\Utility;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -122,14 +120,6 @@ class HtmlDocument extends Document implements CacheControllerFactoryAwareInterf
      * @since  4.0.0
      */
     private $html5 = true;
-
-    /**
-     * List of type \Joomla\CMS\Toolbar\Toolbar
-     *
-     * @var    Toolbar[]
-     * @since  5.0.0
-     */
-    private $toolbars = [];
 
     /**
      * Class constructor
@@ -704,7 +694,7 @@ class HtmlDocument extends Document implements CacheControllerFactoryAwareInterf
     {
         $active = CmsFactory::getApplication()->getMenu()->getActive();
 
-        return $active ? \count($active->getChildren()) : 0;
+        return $active ? count($active->getChildren()) : 0;
     }
 
     /**
@@ -729,7 +719,8 @@ class HtmlDocument extends Document implements CacheControllerFactoryAwareInterf
             // Get the file content
             ob_start();
             require $directory . '/' . $filename;
-            $contents = ob_get_clean();
+            $contents = ob_get_contents();
+            ob_end_clean();
         }
 
         return $contents;
@@ -783,58 +774,6 @@ class HtmlDocument extends Document implements CacheControllerFactoryAwareInterf
 
         // Load
         $this->_template = $this->_loadTemplate($baseDir, $file);
-
-        return $this;
-    }
-
-    /**
-     * Returns a toolbar object or null
-     *
-     * @param   string   $toolbar
-     * @param   boolean  $create
-     *
-     * @return  ?Toolbar
-     *
-     * @since   5.0.0
-     */
-    public function getToolbar(string $toolbar = 'toolbar', bool $create = true): ?Toolbar
-    {
-        if (empty($this->toolbars[$toolbar])) {
-            if (!$create) {
-                return null;
-            }
-
-            $this->toolbars[$toolbar] = CmsFactory::getContainer()->get(ToolbarFactoryInterface::class)->createToolbar($toolbar);
-        }
-
-        return $this->toolbars[$toolbar];
-    }
-
-    /**
-     * Returns the toolbar array
-     *
-     * @return  array
-     *
-     * @since   5.0.0
-     */
-    public function getToolbars(): array
-    {
-        return $this->toolbars;
-    }
-
-    /**
-     * Adds a new or replace an existing toolbar object
-     *
-     * @param   string   $name
-     * @param   Toolbar  $toolbar
-     *
-     * @return  $this
-     *
-     * @since   5.0.0
-     */
-    public function setToolbar(string $name, Toolbar $toolbar): self
-    {
-        $this->toolbars[$name] = $toolbar;
 
         return $this;
     }

@@ -16,7 +16,6 @@ use DebugBar\OpenHandler;
 use Joomla\Application\ApplicationEvents;
 use Joomla\CMS\Application\CMSApplicationInterface;
 use Joomla\CMS\Document\HtmlDocument;
-use Joomla\CMS\Event\Plugin\AjaxEvent;
 use Joomla\CMS\Log\Log;
 use Joomla\CMS\Log\LogEntry;
 use Joomla\CMS\Log\Logger\InMemoryLogger;
@@ -166,7 +165,7 @@ final class Debug extends CMSPlugin implements SubscriberInterface
      *
      * @since   1.5
      */
-    public function __construct(DispatcherInterface $dispatcher, array $config, CMSApplicationInterface $app, DatabaseInterface $db)
+    public function __construct(DispatcherInterface $dispatcher, $config, CMSApplicationInterface $app, DatabaseInterface $db)
     {
         parent::__construct($dispatcher, $config);
 
@@ -372,13 +371,13 @@ final class Debug extends CMSPlugin implements SubscriberInterface
     /**
      * AJAX handler
      *
-     * @param AjaxEvent $event
+     * @param   Event $event
      *
      * @return  void
      *
      * @since  4.0.0
      */
-    public function onAjaxDebug(AjaxEvent $event)
+    public function onAjaxDebug($event)
     {
         // Do not render if debugging or language debug is not enabled.
         if (!JDEBUG && !$this->debugLang) {
@@ -392,10 +391,12 @@ final class Debug extends CMSPlugin implements SubscriberInterface
 
         switch ($this->getApplication()->getInput()->get('action')) {
             case 'openhandler':
+                $result  = $event['result'] ?: [];
                 $handler = new OpenHandler($this->debugBar);
-                $result  = $handler->handle($this->getApplication()->getInput()->request->getArray(), false, false);
 
-                $event->addResult($result);
+                $result[]        = $handler->handle($this->getApplication()->getInput()->request->getArray(), false, false);
+                $event['result'] = $result;
+                break;
         }
     }
 
@@ -480,7 +481,7 @@ final class Debug extends CMSPlugin implements SubscriberInterface
             }
         }
 
-        if ($this->params->get('query_explains') && \in_array($db->getServerType(), ['mysql', 'postgresql'], true)) {
+        if ($this->params->get('query_explains') && in_array($db->getServerType(), ['mysql', 'postgresql'], true)) {
             $logs        = $this->queryMonitor->getLogs();
             $boundParams = $this->queryMonitor->getBoundParams();
 
@@ -695,7 +696,7 @@ final class Debug extends CMSPlugin implements SubscriberInterface
             $metrics .= sprintf('%s;dur=%f;desc="%s", ', $index . $name, $mark->time, $desc);
 
             // Do not create too large headers, some web servers don't love them
-            if (\strlen($metrics) > 3000) {
+            if (strlen($metrics) > 3000) {
                 $metrics .= 'System;dur=0;desc="Data truncated to 3000 characters", ';
                 break;
             }

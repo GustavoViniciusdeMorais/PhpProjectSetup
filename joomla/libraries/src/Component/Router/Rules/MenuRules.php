@@ -14,7 +14,7 @@ use Joomla\CMS\Component\Router\RouterView;
 use Joomla\CMS\Language\Multilanguage;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -76,7 +76,7 @@ class MenuRules implements RulesInterface
         }
 
         // Get query language
-        $language = $query['lang'] ?? '*';
+        $language = isset($query['lang']) ? $query['lang'] : '*';
 
         // Set the language to the current one when multilang is enabled and item is tagged to ALL
         if (Multilanguage::isEnabled() && $language === '*') {

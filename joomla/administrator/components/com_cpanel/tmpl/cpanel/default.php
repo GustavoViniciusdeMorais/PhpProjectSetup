@@ -10,11 +10,11 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Helper\ModuleHelper;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
-use Joomla\Registry\Registry;
 
 // Load JavaScript message titles
 Text::script('ERROR');
@@ -30,7 +30,7 @@ $wa = $this->document->getWebAssetManager();
 $wa->useScript('com_cpanel.admin-cpanel')
     ->useScript('com_cpanel.admin-addmodule');
 
-$user = $this->getCurrentUser();
+$user = Factory::getUser();
 
 // Set up the bootstrap modal that will be used for all module editors
 echo HTMLHelper::_(
@@ -54,12 +54,7 @@ echo HTMLHelper::_(
         <div class="card-columns">
         <?php if ($this->quickicons) :
             foreach ($this->quickicons as $iconmodule) {
-                $modParams = new Registry($iconmodule->params);
-
-                echo ModuleHelper::renderModule($iconmodule, [
-                   'style' => 'well',
-                   'class' => 'quickicons-for-' . $modParams->get('context', ''),
-                ]);
+                echo ModuleHelper::renderModule($iconmodule, ['style' => 'well']);
             }
         endif;
         foreach ($this->modules as $module) {

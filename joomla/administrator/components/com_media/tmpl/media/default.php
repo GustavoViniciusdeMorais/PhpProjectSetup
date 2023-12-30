@@ -13,6 +13,7 @@ defined('_JEXEC') or die;
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Session\Session;
+use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Uri\Uri;
 
 $app    = Factory::getApplication();
@@ -30,6 +31,13 @@ $wa->useScript('keepalive')
 $this->loadTemplate('texts');
 
 $tmpl = $input->getCmd('tmpl');
+
+// Load the toolbar when we are in an iframe
+if ($tmpl === 'component') {
+    echo '<div class="subhead noshadow">';
+    echo Toolbar::getInstance('toolbar')->render();
+    echo '</div>';
+}
 
 $mediaTypes = '&mediatypes=' . $input->getString('mediatypes', '0,1,2,3');
 
@@ -55,9 +63,4 @@ $config = [
 ];
 $this->document->addScriptOptions('com_media', $config);
 ?>
-<?php if ($tmpl === 'component') : ?>
-<div class="subhead noshadow mb-3">
-    <?php echo $this->document->getToolbar('toolbar')->render(); ?>
-</div>
-<?php endif; ?>
 <div id="com-media"></div>

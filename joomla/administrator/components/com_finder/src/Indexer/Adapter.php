@@ -15,7 +15,6 @@ use Joomla\CMS\Plugin\CMSPlugin;
 use Joomla\CMS\Table\Table;
 use Joomla\Database\DatabaseInterface;
 use Joomla\Database\QueryInterface;
-use Joomla\Event\DispatcherInterface;
 use Joomla\Utilities\ArrayHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -131,15 +130,15 @@ abstract class Adapter extends CMSPlugin
     /**
      * Method to instantiate the indexer adapter.
      *
-     * @param   DispatcherInterface  $dispatcher  The object to observe.
-     * @param   array                $config      An array that holds the plugin configuration.
+     * @param   object  $subject  The object to observe.
+     * @param   array   $config   An array that holds the plugin configuration.
      *
      * @since   2.5
      */
-    public function __construct(DispatcherInterface $dispatcher, array $config)
+    public function __construct(&$subject, $config)
     {
         // Call the parent constructor.
-        parent::__construct($dispatcher, $config);
+        parent::__construct($subject, $config);
 
         // Get the type id.
         $this->type_id = $this->getTypeId();
@@ -156,23 +155,6 @@ abstract class Adapter extends CMSPlugin
 
         // Get the indexer object
         $this->indexer = new Indexer($this->db);
-    }
-
-    /**
-     * Returns an array of events this subscriber will listen to.
-     *
-     * @return  array
-     *
-     * @since   5.0.0
-     */
-    public static function getSubscribedEvents(): array
-    {
-        return [
-            'onBeforeIndex'             => 'onBeforeIndex',
-            'onBuildIndex'              => 'onBuildIndex',
-            'onFinderGarbageCollection' => 'onFinderGarbageCollection',
-            'onStartIndex'              => 'onStartIndex',
-        ];
     }
 
     /**
@@ -256,7 +238,7 @@ abstract class Adapter extends CMSPlugin
         $items = $this->getItems($offset, $limit);
 
         // Iterate through the items and index them.
-        for ($i = 0, $n = \count($items); $i < $n; $i++) {
+        for ($i = 0, $n = count($items); $i < $n; $i++) {
             // Index the item.
             $this->index($items[$i]);
 
@@ -302,7 +284,7 @@ abstract class Adapter extends CMSPlugin
             $this->indexer->remove($item);
         }
 
-        return \count($items);
+        return count($items);
     }
 
     /**
@@ -922,16 +904,9 @@ abstract class Adapter extends CMSPlugin
 
         // Translate the state
         switch ($item) {
-            // Published items should always show up in search results
+            // Published and archived items only should return a published state
             case 1:
-                return 1;
-
-            // Archived items should only show up when option is enabled
             case 2:
-                if ($this->params->get('search_archived', 1) == 0) {
-                    return 0;
-                }
-
                 return 1;
 
             // All other states should return an unpublished state

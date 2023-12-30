@@ -15,8 +15,6 @@ use Joomla\CMS\Factory;
 use Joomla\CMS\MVC\Factory\MVCFactoryInterface;
 use Joomla\CMS\MVC\Model\ListModel;
 use Joomla\CMS\User\User;
-use Joomla\CMS\User\UserFactoryAwareInterface;
-use Joomla\CMS\User\UserFactoryAwareTrait;
 use Joomla\Component\Users\Administrator\Helper\DebugHelper;
 use Joomla\Database\DatabaseQuery;
 use Joomla\Database\ParameterType;
@@ -30,10 +28,8 @@ use Joomla\Database\ParameterType;
  *
  * @since  1.6
  */
-class DebuguserModel extends ListModel implements UserFactoryAwareInterface
+class DebuguserModel extends ListModel
 {
-    use UserFactoryAwareTrait;
-
     /**
      * Constructor.
      *
@@ -82,7 +78,7 @@ class DebuguserModel extends ListModel implements UserFactoryAwareInterface
     public function getItems()
     {
         $userId = $this->getState('user_id');
-        $user   = $this->getUserFactory()->loadUserById($userId);
+        $user   = Factory::getUser($userId);
 
         if (($assets = parent::getItems()) && $userId) {
             $actions = $this->getDebugActions();
@@ -183,7 +179,7 @@ class DebuguserModel extends ListModel implements UserFactoryAwareInterface
     {
         $userId = $this->getState('user_id');
 
-        return $this->getUserFactory()->loadUserById($userId);
+        return Factory::getUser($userId);
     }
 
     /**

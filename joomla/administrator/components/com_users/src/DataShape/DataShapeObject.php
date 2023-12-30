@@ -26,7 +26,7 @@ abstract class DataShapeObject implements \ArrayAccess
      */
     public function __construct(array $array = [])
     {
-        if (!\is_array($array) && !($array instanceof self)) {
+        if (!is_array($array) && !($array instanceof self)) {
             throw new \InvalidArgumentException(sprintf('%s needs an array or a %s object', __METHOD__, __CLASS__));
         }
 
@@ -58,7 +58,7 @@ abstract class DataShapeObject implements \ArrayAccess
      */
     public function merge($newValues): self
     {
-        if (!\is_array($newValues) && !($newValues instanceof self)) {
+        if (!is_array($newValues) && !($newValues instanceof self)) {
             throw new \InvalidArgumentException(sprintf('%s needs an array or a %s object', __METHOD__, __CLASS__));
         }
 
@@ -129,7 +129,8 @@ abstract class DataShapeObject implements \ArrayAccess
      * @return  boolean  Does it exist in the object?
      * @since 4.2.0
      */
-    public function __isset($name): bool
+    #[\ReturnTypeWillChange]
+    public function __isset($name)
     {
         $methodName = 'get' . ucfirst($name);
 
@@ -144,7 +145,8 @@ abstract class DataShapeObject implements \ArrayAccess
      * @return  boolean
      * @since 4.2.0
      */
-    public function offsetExists($offset): bool
+    #[\ReturnTypeWillChange]
+    public function offsetExists($offset)
     {
         return isset($this->{$offset});
     }
@@ -157,7 +159,8 @@ abstract class DataShapeObject implements \ArrayAccess
      * @return  mixed
      * @since 4.2.0
      */
-    public function offsetGet($offset): mixed
+    #[\ReturnTypeWillChange]
+    public function offsetGet($offset)
     {
         return $this->{$offset};
     }
@@ -171,7 +174,8 @@ abstract class DataShapeObject implements \ArrayAccess
      * @return void
      * @since 4.2.0
      */
-    public function offsetSet($offset, $value): void
+    #[\ReturnTypeWillChange]
+    public function offsetSet($offset, $value)
     {
         $this->{$offset} = $value;
     }
@@ -181,10 +185,11 @@ abstract class DataShapeObject implements \ArrayAccess
      *
      * @param   string  $offset  Property name
      *
-     * @return  void
+     * @return  mixed
      * @since 4.2.0
      */
-    public function offsetUnset($offset): void
+    #[\ReturnTypeWillChange]
+    public function offsetUnset($offset)
     {
         throw new \LogicException(sprintf('You cannot unset members of %s', __CLASS__));
     }

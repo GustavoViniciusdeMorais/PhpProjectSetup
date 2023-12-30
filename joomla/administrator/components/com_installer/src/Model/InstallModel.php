@@ -10,11 +10,9 @@
 
 namespace Joomla\Component\Installer\Administrator\Model;
 
-use Joomla\CMS\Event\Installer\AfterInstallerEvent;
-use Joomla\CMS\Event\Installer\BeforeInstallationEvent;
-use Joomla\CMS\Event\Installer\BeforeInstallerEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Filesystem\File;
+use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\Installer\Installer;
 use Joomla\CMS\Installer\InstallerHelper;
 use Joomla\CMS\Language\Text;
@@ -23,7 +21,6 @@ use Joomla\CMS\Plugin\PluginHelper;
 use Joomla\CMS\Router\Route;
 use Joomla\CMS\Updater\Update;
 use Joomla\CMS\Uri\Uri;
-use Joomla\Filesystem\Path;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
@@ -85,28 +82,22 @@ class InstallModel extends BaseDatabaseModel
     {
         $this->setState('action', 'install');
 
-        $app        = Factory::getApplication();
-        $dispatcher = $this->getDispatcher();
+        $app = Factory::getApplication();
 
         // Load installer plugins for assistance if required:
-        PluginHelper::importPlugin('installer', null, true, $dispatcher);
+        PluginHelper::importPlugin('installer');
 
         $package = null;
 
         // This event allows an input pre-treatment, a custom pre-packing or custom installation.
         // (e.g. from a \JSON description).
-        $eventBefore = new BeforeInstallationEvent('onInstallerBeforeInstallation', [
-            'subject' => $this,
-            'package' => &$package, // @todo: Remove reference in Joomla 6, see InstallerEvent::__constructor()
-        ]);
-        $results = $dispatcher->dispatch('onInstallerBeforeInstallation', $eventBefore)->getArgument('result', []);
-        $package = $eventBefore->getPackage();
+        $results = $app->triggerEvent('onInstallerBeforeInstallation', [$this, &$package]);
 
-        if (\in_array(true, $results, true)) {
+        if (in_array(true, $results, true)) {
             return true;
         }
 
-        if (\in_array(false, $results, true)) {
+        if (in_array(false, $results, true)) {
             return false;
         }
 
@@ -136,25 +127,15 @@ class InstallModel extends BaseDatabaseModel
             }
         }
 
-        // No one of installType was able to resolve $package. Nothing to Install.
-        if (!$package) {
-            return false;
-        }
-
         // This event allows a custom installation of the package or a customization of the package:
-        $eventBeforeInst = new BeforeInstallerEvent('onInstallerBeforeInstaller', [
-            'subject' => $this,
-            'package' => &$package, // @todo: Remove reference in Joomla 6, see InstallerEvent::__constructor()
-        ]);
-        $results = $dispatcher->dispatch('onInstallerBeforeInstaller', $eventBeforeInst)->getArgument('result', []);
-        $package = $eventBeforeInst->getPackage();
+        $results = $app->triggerEvent('onInstallerBeforeInstaller', [$this, &$package]);
 
-        if (\in_array(true, $results, true)) {
+        if (in_array(true, $results, true)) {
             return true;
         }
 
-        if (\in_array(false, $results, true)) {
-            if (\in_array($installType, ['upload', 'url'])) {
+        if (in_array(false, $results, true)) {
+            if (in_array($installType, ['upload', 'url'])) {
                 InstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
             }
 
@@ -185,7 +166,7 @@ class InstallModel extends BaseDatabaseModel
                 // If a manifest isn't found at the source, this may be a Joomla package; check the package directory for the Joomla manifest
                 if (file_exists($package['dir'] . '/administrator/manifests/files/joomla.xml')) {
                     // We have a Joomla package
-                    if (\in_array($installType, ['upload', 'url'])) {
+                    if (in_array($installType, ['upload', 'url'])) {
                         InstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
                     }
 
@@ -201,7 +182,7 @@ class InstallModel extends BaseDatabaseModel
 
         // Was the package unpacked?
         if (empty($package['type'])) {
-            if (\in_array($installType, ['upload', 'url'])) {
+            if (in_array($installType, ['upload', 'url'])) {
                 InstallerHelper::cleanupInstall($package['packagefile'], $package['extractdir']);
             }
 
@@ -224,17 +205,7 @@ class InstallModel extends BaseDatabaseModel
         }
 
         // This event allows a custom a post-flight:
-        $eventAfterInst = new AfterInstallerEvent('onInstallerAfterInstaller', [
-            'subject'         => $this,
-            'package'         => &$package, // @todo: Remove reference in Joomla 6, see InstallerEvent::__constructor()
-            'installer'       => $installer,
-            'installerResult' => &$result, // @todo: Remove reference in Joomla 6, see AfterInstallerEvent::__constructor()
-            'message'         => &$msg, // @todo: Remove reference in Joomla 6, see AfterInstallerEvent::__constructor()
-        ]);
-        $dispatcher->dispatch('onInstallerAfterInstaller', $eventAfterInst);
-        $package = $eventAfterInst->getPackage();
-        $result  = $eventAfterInst->getInstallerResult();
-        $msg     = $eventAfterInst->getMessage();
+        $app->triggerEvent('onInstallerAfterInstaller', [$this, &$package, $installer, &$result, &$msg]);
 
         // Set some model state values.
         $app->enqueueMessage($msg, $msgType);
@@ -281,14 +252,14 @@ class InstallModel extends BaseDatabaseModel
         }
 
         // Make sure that zlib is loaded so that the package can be unpacked.
-        if (!\extension_loaded('zlib')) {
+        if (!extension_loaded('zlib')) {
             Factory::getApplication()->enqueueMessage(Text::_('COM_INSTALLER_MSG_INSTALL_WARNINSTALLZLIB'), 'error');
 
             return false;
         }
 
         // If there is no uploaded file, we have a problem...
-        if (!\is_array($userfile)) {
+        if (!is_array($userfile)) {
             Factory::getApplication()->enqueueMessage(Text::_('COM_INSTALLER_MSG_INSTALL_NO_FILE_SELECTED'), 'error');
 
             return false;
@@ -397,7 +368,7 @@ class InstallModel extends BaseDatabaseModel
         // We only allow http & https here
         $uri = new Uri($url);
 
-        if (!\in_array($uri->getScheme(), ['http', 'https'])) {
+        if (!in_array($uri->getScheme(), ['http', 'https'])) {
             Factory::getApplication()->enqueueMessage(Text::_('COM_INSTALLER_MSG_INSTALL_INVALID_URL_SCHEME'), 'error');
 
             return false;

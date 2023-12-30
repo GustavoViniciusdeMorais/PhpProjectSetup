@@ -29,7 +29,7 @@ use Joomla\DI\Exception\ContainerNotFoundException;
 use Joomla\DI\ServiceProviderInterface;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -1128,9 +1128,7 @@ abstract class InstallerAdapter implements ContainerAwareInterface, DatabaseAwar
             Log::add(Text::_('JLIB_INSTALLER_ERROR_UNINSTALL_LOCKED_EXTENSION'), Log::WARNING, 'jerror');
 
             return false;
-        }
-
-        if (!isset($this->extension->locked) && $this->extension->protected) {
+        } elseif (!isset($this->extension->locked) && $this->extension->protected) {
             // Joomla 3 ('locked' property does not exist yet): Protected extensions cannot be removed.
             Log::add(Text::_('JLIB_INSTALLER_ERROR_UNINSTALL_PROTECTED_EXTENSION'), Log::WARNING, 'jerror');
 

@@ -17,11 +17,10 @@ use Joomla\CMS\Language\Text;
 use Joomla\CMS\Router\Route;
 use Joomla\Database\DatabaseDriver;
 use Joomla\Database\ParameterType;
-use Joomla\Event\DispatcherInterface;
 use Joomla\Registry\Registry;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -42,14 +41,13 @@ class Menu extends Nested
     /**
      * Constructor
      *
-     * @param   DatabaseDriver        $db          Database connector object
-     * @param   ?DispatcherInterface  $dispatcher  Event dispatcher for this table
+     * @param   DatabaseDriver  $db  Database driver object.
      *
      * @since   1.5
      */
-    public function __construct(DatabaseDriver $db, DispatcherInterface $dispatcher = null)
+    public function __construct(DatabaseDriver $db)
     {
-        parent::__construct('#__menu', 'id', $db, $dispatcher);
+        parent::__construct('#__menu', 'id', $db);
 
         // Set the default access level.
         $this->access = (int) Factory::getApplication()->get('access');
@@ -174,7 +172,7 @@ class Menu extends Nested
         $db = $this->getDbo();
 
         // Verify that the alias is unique
-        $table = new self($db, $this->getDispatcher());
+        $table = Table::getInstance('Menu', 'JTable', ['dbo' => $db]);
 
         $originalAlias = trim($this->alias);
         $this->alias   = !$originalAlias ? $this->title : $originalAlias;
@@ -242,7 +240,7 @@ class Menu extends Nested
 
             // The alias already exists. Enqueue an error message.
             if ($error) {
-                $menuTypeTable = new MenuType($this->getDbo(), $this->getDispatcher());
+                $menuTypeTable = Table::getInstance('MenuType', 'JTable', ['dbo' => $db]);
                 $menuTypeTable->load(['menutype' => $table->menutype]);
                 $url = Route::_('index.php?option=com_menus&task=item.edit&id=' . (int) $table->id);
 

@@ -476,9 +476,7 @@ class TracksModel extends ListModel
                     $this->setError(Text::_('COM_BANNERS_ERR_ZIP_ADAPTER_FAILURE'));
 
                     return false;
-                }
-
-                if (!$packager->create($ziproot, $files)) {
+                } elseif (!$packager->create($ziproot, $files)) {
                     $this->setError(Text::_('COM_BANNERS_ERR_ZIP_CREATE_FAILURE'));
 
                     return false;

@@ -14,6 +14,7 @@ use Joomla\CMS\Helper\ContentHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\View\GenericDataException;
 use Joomla\CMS\MVC\View\HtmlView as BaseHtmlView;
+use Joomla\CMS\Object\CMSObject;
 use Joomla\CMS\Toolbar\Toolbar;
 use Joomla\CMS\Toolbar\ToolbarHelper;
 
@@ -47,7 +48,7 @@ class HtmlView extends BaseHtmlView
     /**
      * The model state.
      *
-     * @var   \Joomla\Registry\Registry
+     * @var   CMSObject
      * @since 1.6
      */
     protected $state;
@@ -85,7 +86,7 @@ class HtmlView extends BaseHtmlView
         $this->activeFilters = $this->get('ActiveFilters');
 
         // Check for errors.
-        if (\count($errors = $this->get('Errors'))) {
+        if (count($errors = $this->get('Errors'))) {
             throw new GenericDataException(implode("\n", $errors), 500);
         }
 

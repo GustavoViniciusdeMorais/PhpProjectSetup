@@ -26,7 +26,7 @@ $wa->useScript('com_contact.contacts-list')
 
 $canDo   = ContactHelper::getActions('com_contact', 'category', $this->category->id);
 $canEdit = $canDo->get('core.edit');
-$userId  = $this->getCurrentUser()->id;
+$userId  = Factory::getUser()->id;
 
 $showEditColumn = false;
 if ($canEdit) {

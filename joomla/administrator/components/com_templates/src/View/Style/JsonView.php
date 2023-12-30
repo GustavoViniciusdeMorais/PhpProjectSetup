@@ -42,7 +42,7 @@ class JsonView extends BaseHtmlView
     /**
      * The model state
      *
-     * @var   \Joomla\Registry\Registry
+     * @var   CMSObject
      */
     protected $state;
 

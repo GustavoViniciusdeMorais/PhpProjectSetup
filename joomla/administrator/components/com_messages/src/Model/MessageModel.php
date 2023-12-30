@@ -24,8 +24,6 @@ use Joomla\CMS\Router\Route;
 use Joomla\CMS\Table\Asset;
 use Joomla\CMS\Table\Table;
 use Joomla\CMS\User\User;
-use Joomla\CMS\User\UserFactoryAwareInterface;
-use Joomla\CMS\User\UserFactoryAwareTrait;
 use Joomla\Database\ParameterType;
 use PHPMailer\PHPMailer\Exception as phpMailerException;
 
@@ -38,10 +36,8 @@ use PHPMailer\PHPMailer\Exception as phpMailerException;
  *
  * @since  1.6
  */
-class MessageModel extends AdminModel implements UserFactoryAwareInterface
+class MessageModel extends AdminModel
 {
-    use UserFactoryAwareTrait;
-
     /**
      * Message
      *
@@ -315,7 +311,7 @@ class MessageModel extends AdminModel implements UserFactoryAwareInterface
         }
 
         // Load the user details (already valid from table check).
-        $toUser = $this->getUserFactory()->loadUserById($table->user_id_to);
+        $toUser = User::getInstance($table->user_id_to);
 
         // Check if recipient can access com_messages.
         if (!$toUser->authorise('core.login.admin') || !$toUser->authorise('core.manage', 'com_messages')) {
@@ -356,7 +352,7 @@ class MessageModel extends AdminModel implements UserFactoryAwareInterface
         }
 
         if ($config->get('mail_on_new', true)) {
-            $fromUser         = $this->getUserFactory()->loadUserById($table->user_id_from);
+            $fromUser         = User::getInstance($table->user_id_from);
             $debug            = Factory::getApplication()->get('debug_lang');
             $default_language = ComponentHelper::getParams('com_languages')->get('administrator');
             $lang             = Language::getInstance($toUser->getParam('admin_language', $default_language), $debug);

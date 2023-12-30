@@ -10,6 +10,7 @@
 
 namespace Joomla\Component\Actionlogs\Administrator\Plugin;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Plugin\CMSPlugin;
 
 // phpcs:disable PSR1.Files.SideEffects
@@ -63,7 +64,7 @@ abstract class ActionLogPlugin extends CMSPlugin
      */
     protected function addLog($messages, $messageLanguageKey, $context, $userId = null)
     {
-        $user = $this->app->getIdentity();
+        $user = Factory::getUser();
 
         foreach ($messages as $index => $message) {
             if (!\array_key_exists('userid', $message)) {

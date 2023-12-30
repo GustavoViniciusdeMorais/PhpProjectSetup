@@ -12,21 +12,8 @@ namespace Joomla\CMS\Application;
 use Joomla\Application\SessionAwareWebApplicationTrait;
 use Joomla\Application\Web\WebClient;
 use Joomla\CMS\Authentication\Authentication;
-use Joomla\CMS\Event\Application\AfterCompressEvent;
-use Joomla\CMS\Event\Application\AfterInitialiseEvent;
-use Joomla\CMS\Event\Application\AfterRenderEvent;
-use Joomla\CMS\Event\Application\AfterRespondEvent;
-use Joomla\CMS\Event\Application\AfterRouteEvent;
-use Joomla\CMS\Event\Application\BeforeRenderEvent;
-use Joomla\CMS\Event\Application\BeforeRespondEvent;
+use Joomla\CMS\Event\AbstractEvent;
 use Joomla\CMS\Event\ErrorEvent;
-use Joomla\CMS\Event\User\AfterLoginEvent;
-use Joomla\CMS\Event\User\AfterLogoutEvent;
-use Joomla\CMS\Event\User\AuthorisationFailureEvent;
-use Joomla\CMS\Event\User\LoginEvent;
-use Joomla\CMS\Event\User\LoginFailureEvent;
-use Joomla\CMS\Event\User\LogoutEvent;
-use Joomla\CMS\Event\User\LogoutFailureEvent;
 use Joomla\CMS\Exception\ExceptionHandler;
 use Joomla\CMS\Extension\ExtensionManagerTrait;
 use Joomla\CMS\Factory;
@@ -52,7 +39,7 @@ use Joomla\Registry\Registry;
 use Joomla\String\StringHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -167,16 +154,16 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
     /**
      * Class constructor.
      *
-     * @param   ?Input      $input      An optional argument to provide dependency injection for the application's input
-     *                                  object.  If the argument is a JInput object that object will become the
-     *                                  application's input object, otherwise a default input object is created.
-     * @param   ?Registry   $config     An optional argument to provide dependency injection for the application's config
-     *                                  object.  If the argument is a Registry object that object will become the
-     *                                  application's config object, otherwise a default config object is created.
-     * @param   ?WebClient  $client     An optional argument to provide dependency injection for the application's client
-     *                                  object.  If the argument is a WebClient object that object will become the
-     *                                  application's client object, otherwise a default client object is created.
-     * @param   ?Container  $container  Dependency injection container.
+     * @param   Input      $input      An optional argument to provide dependency injection for the application's input
+     *                                 object.  If the argument is a JInput object that object will become the
+     *                                 application's input object, otherwise a default input object is created.
+     * @param   Registry   $config     An optional argument to provide dependency injection for the application's config
+     *                                 object.  If the argument is a Registry object that object will become the
+     *                                 application's config object, otherwise a default config object is created.
+     * @param   WebClient  $client     An optional argument to provide dependency injection for the application's client
+     *                                 object.  If the argument is a WebClient object that object will become the
+     *                                 application's client object, otherwise a default client object is created.
+     * @param   Container  $container  Dependency injection container.
      *
      * @since   3.2
      */
@@ -273,7 +260,7 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
         $invalidInputVariables = array_filter(
             ['option', 'view', 'format', 'lang', 'Itemid', 'template', 'templateStyle', 'task'],
             function ($systemVariable) use ($input) {
-                return $input->exists($systemVariable) && \is_array($input->getRaw($systemVariable));
+                return $input->exists($systemVariable) && is_array($input->getRaw($systemVariable));
             }
         );
 
@@ -316,40 +303,33 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
                 $this->compress();
 
                 // Trigger the onAfterCompress event.
-                $this->dispatchEvent(
-                    'onAfterCompress',
-                    new AfterCompressEvent('onAfterCompress', ['subject' => $this])
-                );
+                $this->triggerEvent('onAfterCompress');
             }
         } catch (\Throwable $throwable) {
-            $event = new ErrorEvent(
+            /** @var ErrorEvent $event */
+            $event = AbstractEvent::create(
                 'onError',
                 [
                     'subject'     => $throwable,
+                    'eventClass'  => ErrorEvent::class,
                     'application' => $this,
                 ]
             );
 
             // Trigger the onError event.
-            $this->dispatchEvent('onError', $event);
+            $this->triggerEvent('onError', $event);
 
             ExceptionHandler::handleException($event->getError());
         }
 
         // Trigger the onBeforeRespond event.
-        $this->dispatchEvent(
-            'onBeforeRespond',
-            new BeforeRespondEvent('onBeforeRespond', ['subject' => $this])
-        );
+        $this->getDispatcher()->dispatch('onBeforeRespond');
 
         // Send the application response.
         $this->respond();
 
         // Trigger the onAfterRespond event.
-        $this->dispatchEvent(
-            'onAfterRespond',
-            new AfterRespondEvent('onAfterRespond', ['subject' => $this])
-        );
+        $this->getDispatcher()->dispatch('onAfterRespond');
     }
 
     /**
@@ -473,9 +453,9 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
      *
      * This method must be invoked as: $web = CmsApplication::getInstance();
      *
-     * @param   string      $name       The name (optional) of the CmsApplication class to instantiate.
-     * @param   string      $prefix     The class name prefix of the object.
-     * @param   ?Container  $container  An optional dependency injection container to inject into the application.
+     * @param   string     $name       The name (optional) of the CmsApplication class to instantiate.
+     * @param   string     $prefix     The class name prefix of the object.
+     * @param   Container  $container  An optional dependency injection container to inject into the application.
      *
      * @return  CmsApplication
      *
@@ -531,7 +511,7 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
             $options['app'] = $this;
         }
 
-        if (\array_key_exists($name, $this->menus)) {
+        if (array_key_exists($name, $this->menus)) {
             return $this->menus[$name];
         }
 
@@ -694,8 +674,7 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
      * @param   string  $key      The key of the user state variable.
      * @param   string  $request  The name of the variable passed in a request.
      * @param   string  $default  The default value for the variable if not found. Optional.
-     * @param   string  $type     Filter for the variable. Optional.
-     *                  @see      \Joomla\CMS\Filter\InputFilter::clean() for valid values.
+     * @param   string  $type     Filter for the variable, for valid values see {@link InputFilter::clean()}. Optional.
      *
      * @return  mixed  The request user state.
      *
@@ -759,14 +738,11 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
         $this->set('editor', $editor);
 
         // Load the behaviour plugins
-        PluginHelper::importPlugin('behaviour', null, true, $this->getDispatcher());
+        PluginHelper::importPlugin('behaviour');
 
         // Trigger the onAfterInitialise event.
-        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
-        $this->dispatchEvent(
-            'onAfterInitialise',
-            new AfterInitialiseEvent('onAfterInitialise', ['subject' => $this])
-        );
+        PluginHelper::importPlugin('system');
+        $this->triggerEvent('onAfterInitialise');
     }
 
     /**
@@ -844,10 +820,9 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
         // Get the global Authentication object.
         $authenticate = Authentication::getInstance($this->authenticationPluginType);
         $response     = $authenticate->authenticate($credentials, $options);
-        $dispatcher   = $this->getDispatcher();
 
         // Import the user plugin group.
-        PluginHelper::importPlugin('user', null, true, $dispatcher);
+        PluginHelper::importPlugin('user');
 
         if ($response->status === Authentication::STATUS_SUCCESS) {
             /*
@@ -860,10 +835,7 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
             foreach ($authorisations as $authorisation) {
                 if ((int) $authorisation->status & $denied_states) {
                     // Trigger onUserAuthorisationFailure Event.
-                    $dispatcher->dispatch('onUserAuthorisationFailure', new AuthorisationFailureEvent('onUserAuthorisationFailure', [
-                        'subject' => (array) $authorisation,
-                        'options' => $options,
-                    ]));
+                    $this->triggerEvent('onUserAuthorisationFailure', [(array) $authorisation]);
 
                     // If silent is set, just return false.
                     if (isset($options['silent']) && $options['silent']) {
@@ -873,17 +845,17 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
                     // Return the error.
                     switch ($authorisation->status) {
                         case Authentication::STATUS_EXPIRED:
-                            $this->enqueueMessage(Text::_('JLIB_LOGIN_EXPIRED'), 'error');
+                            Factory::getApplication()->enqueueMessage(Text::_('JLIB_LOGIN_EXPIRED'), 'error');
 
                             return false;
 
                         case Authentication::STATUS_DENIED:
-                            $this->enqueueMessage(Text::_('JLIB_LOGIN_DENIED'), 'error');
+                            Factory::getApplication()->enqueueMessage(Text::_('JLIB_LOGIN_DENIED'), 'error');
 
                             return false;
 
                         default:
-                            $this->enqueueMessage(Text::_('JLIB_LOGIN_AUTHORISATION'), 'error');
+                            Factory::getApplication()->enqueueMessage(Text::_('JLIB_LOGIN_AUTHORISATION'), 'error');
 
                             return false;
                     }
@@ -891,9 +863,7 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
             }
 
             // OK, the credentials are authenticated and user is authorised.  Let's fire the onLogin event.
-            $loginEvent = new LoginEvent('onUserLogin', ['subject' => (array) $response, 'options' => $options]);
-            $dispatcher->dispatch('onUserLogin', $loginEvent);
-            $results = $loginEvent['result'] ?? [];
+            $results = $this->triggerEvent('onUserLogin', [(array) $response, $options]);
 
             /*
              * If any of the user plugins did not successfully complete the login routine
@@ -913,20 +883,14 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
                 $options['responseType'] = $response->type;
 
                 // The user is successfully logged in. Run the after login events
-                $dispatcher->dispatch('onUserAfterLogin', new AfterLoginEvent('onUserAfterLogin', [
-                    'options' => $options,
-                    'subject' => (array) $response,
-                ]));
+                $this->triggerEvent('onUserAfterLogin', [$options]);
 
                 return true;
             }
         }
 
         // Trigger onUserLoginFailure Event.
-        $dispatcher->dispatch('onUserLoginFailure', new LoginFailureEvent('onUserLoginFailure', [
-            'subject' => (array) $response,
-            'options' => $options,
-        ]));
+        $this->triggerEvent('onUserLoginFailure', [(array) $response]);
 
         // If silent is set, just return false.
         if (isset($options['silent']) && $options['silent']) {
@@ -961,8 +925,7 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
     public function logout($userid = null, $options = [])
     {
         // Get a user object from the Application.
-        $user       = Factory::getUser($userid);
-        $dispatcher = $this->getDispatcher();
+        $user = Factory::getUser($userid);
 
         // Build the credentials array.
         $parameters = [
@@ -976,29 +939,21 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
         }
 
         // Import the user plugin group.
-        PluginHelper::importPlugin('user', null, true, $dispatcher);
+        PluginHelper::importPlugin('user');
 
         // OK, the credentials are built. Lets fire the onLogout event.
-        $logoutEvent = new LogoutEvent('onUserLogout', ['subject' => $parameters, 'options' => $options]);
-        $dispatcher->dispatch('onUserLogout', $logoutEvent);
-        $results = $logoutEvent['result'] ?? [];
+        $results = $this->triggerEvent('onUserLogout', [$parameters, $options]);
 
         // Check if any of the plugins failed. If none did, success.
         if (!\in_array(false, $results, true)) {
             $options['username'] = $user->get('username');
-            $dispatcher->dispatch('onUserAfterLogout', new AfterLogoutEvent('onUserAfterLogout', [
-                'options' => $options,
-                'subject' => $parameters,
-            ]));
+            $this->triggerEvent('onUserAfterLogout', [$options]);
 
             return true;
         }
 
         // Trigger onUserLogoutFailure Event.
-        $dispatcher->dispatch('onUserLogoutFailure', new LogoutFailureEvent('onUserLogoutFailure', [
-            'subject' => $parameters,
-            'options' => $options,
-        ]));
+        $this->triggerEvent('onUserLogoutFailure', [$parameters]);
 
         return false;
     }
@@ -1057,11 +1012,8 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
         $this->document->parse($this->docOptions);
 
         // Trigger the onBeforeRender event.
-        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
-        $this->dispatchEvent(
-            'onBeforeRender',
-            new BeforeRenderEvent('onBeforeRender', ['subject' => $this])
-        );
+        PluginHelper::importPlugin('system');
+        $this->triggerEvent('onBeforeRender');
 
         $caching = false;
 
@@ -1076,10 +1028,7 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
         $this->setBody($data);
 
         // Trigger the onAfterRender event.
-        $this->dispatchEvent(
-            'onAfterRender',
-            new AfterRenderEvent('onAfterRender', ['subject' => $this])
-        );
+        $this->triggerEvent('onAfterRender');
 
         // Mark afterRender in the profiler.
         JDEBUG ? $this->profiler->mark('afterRender') : null;
@@ -1149,11 +1098,8 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
         }
 
         // Trigger the onAfterRoute event.
-        PluginHelper::importPlugin('system', null, true, $this->getDispatcher());
-        $this->dispatchEvent(
-            'onAfterRoute',
-            new AfterRouteEvent('onAfterRoute', ['subject' => $this])
-        );
+        PluginHelper::importPlugin('system');
+        $this->triggerEvent('onAfterRoute');
     }
 
     /**
@@ -1329,8 +1275,8 @@ abstract class CMSApplication extends WebApplication implements ContainerAwareIn
             foreach ($this->get('log_priorities', ['all']) as $p) {
                 $const = '\\Joomla\\CMS\\Log\\Log::' . strtoupper($p);
 
-                if (\defined($const)) {
-                    $priority |= \constant($const);
+                if (defined($const)) {
+                    $priority |= constant($const);
                 }
             }
 

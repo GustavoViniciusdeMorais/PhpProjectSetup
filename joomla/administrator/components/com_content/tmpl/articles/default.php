@@ -31,7 +31,7 @@ $wa->useScript('table.columns')
     ->useScript('multiselect');
 
 $app       = Factory::getApplication();
-$user      = $this->getCurrentUser();
+$user      = Factory::getUser();
 $userId    = $user->get('id');
 $listOrder = $this->escape($this->state->get('list.ordering'));
 $listDirn  = $this->escape($this->state->get('list.direction'));
@@ -375,7 +375,15 @@ $assoc = Associations::isEnabled();
                         && $user->authorise('core.edit', 'com_content')
                         && $user->authorise('core.edit.state', 'com_content')
                     ) : ?>
-                        <template id="joomla-dialog-batch"><?php echo $this->loadTemplate('batch_body'); ?></template>
+                        <?php echo HTMLHelper::_(
+                            'bootstrap.renderModal',
+                            'collapseModal',
+                            [
+                                'title'  => Text::_('COM_CONTENT_BATCH_OPTIONS'),
+                                'footer' => $this->loadTemplate('batch_footer'),
+                            ],
+                            $this->loadTemplate('batch_body')
+                        ); ?>
                     <?php endif; ?>
                 <?php endif; ?>
 

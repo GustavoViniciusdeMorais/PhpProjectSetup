@@ -10,6 +10,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\Layout\LayoutHelper;
 
 $displayData = [
@@ -19,7 +20,7 @@ $displayData = [
     'icon' => 'icon-clock clock',
 ];
 
-if ($this->getCurrentUser()->authorise('core.create', 'com_scheduler')) {
+if (Factory::getApplication()->getIdentity()->authorise('core.create', 'com_scheduler')) {
     $displayData['createURL'] = 'index.php?option=com_scheduler&view=select&layout=default';
 }
 

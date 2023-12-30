@@ -9,11 +9,11 @@
 
 namespace Joomla\CMS\HTML\Helpers;
 
+use Joomla\CMS\Filesystem\Path;
 use Joomla\CMS\HTML\HTMLHelper;
-use Joomla\Filesystem\Path;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**

@@ -15,7 +15,7 @@ use Algo26\IdnaConvert\ToUnicode;
 use Joomla\Uri\UriHelper;
 
 // phpcs:disable PSR1.Files.SideEffects
-\defined('_JEXEC') or die;
+\defined('JPATH_PLATFORM') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
@@ -215,7 +215,7 @@ abstract class PunycodeHelper
             }
 
             $newdomain = substr($newdomain, 0, -1);
-            $newEmail .= '@' . $newdomain;
+            $newEmail  = $newEmail . '@' . $newdomain;
         }
 
         return $newEmail;
@@ -248,7 +248,7 @@ abstract class PunycodeHelper
             }
 
             $newdomain = substr($newdomain, 0, -1);
-            $newEmail .= '@' . $newdomain;
+            $newEmail  = $newEmail . '@' . $newdomain;
         }
 
         return $newEmail;

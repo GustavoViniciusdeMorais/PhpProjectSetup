@@ -11,6 +11,7 @@
 
 defined('_JEXEC') or die;
 
+use Joomla\CMS\Factory;
 use Joomla\CMS\HTML\HTMLHelper;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\Layout\LayoutHelper;
@@ -41,7 +42,7 @@ if ($saveOrder) {
 
 $extension = $this->escape($this->state->get('filter.extension'));
 
-$user = $this->getCurrentUser();
+$user = Factory::getUser();
 $userId = $user->id;
 ?>
 <form action="<?php echo Route::_('index.php?option=com_workflow&view=workflows&extension=' . $extension); ?>" method="post" name="adminForm" id="adminForm">

@@ -14,7 +14,6 @@ use Joomla\CMS\Cache\Cache;
 use Joomla\CMS\Cache\CacheController;
 use Joomla\CMS\Cache\Exception\CacheConnectingException;
 use Joomla\CMS\Cache\Exception\UnsupportedCacheException;
-use Joomla\CMS\Event\Cache\AfterPurgeEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Language\Text;
 use Joomla\CMS\MVC\Model\ListModel;
@@ -193,7 +192,7 @@ class CacheModel extends ListModel
     public function getTotal()
     {
         if (empty($this->_total)) {
-            $this->_total = \count($this->getData());
+            $this->_total = count($this->getData());
         }
 
         return $this->_total;
@@ -231,7 +230,7 @@ class CacheModel extends ListModel
             return false;
         }
 
-        $this->getDispatcher()->dispatch('onAfterPurge', new AfterPurgeEvent('onAfterPurge', ['subject' => $group]));
+        Factory::getApplication()->triggerEvent('onAfterPurge', [$group]);
 
         return true;
     }
@@ -271,7 +270,7 @@ class CacheModel extends ListModel
             return false;
         }
 
-        $this->getDispatcher()->dispatch('onAfterPurge', new AfterPurgeEvent('onAfterPurge'));
+        Factory::getApplication()->triggerEvent('onAfterPurge', []);
 
         return true;
     }

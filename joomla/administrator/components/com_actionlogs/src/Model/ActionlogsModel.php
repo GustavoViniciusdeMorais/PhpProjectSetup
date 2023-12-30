@@ -12,7 +12,6 @@ namespace Joomla\Component\Actionlogs\Administrator\Model;
 
 use Joomla\CMS\Component\ComponentHelper;
 use Joomla\CMS\Date\Date;
-use Joomla\CMS\Event\ActionLog\AfterLogPurgeEvent;
 use Joomla\CMS\Factory;
 use Joomla\CMS\Form\Form;
 use Joomla\CMS\Language\Text;
@@ -117,7 +116,7 @@ class ActionlogsModel extends ListModel
 
         // Apply filter by extension
         if (!empty($extension)) {
-            $extension .= '%';
+            $extension = $extension . '%';
             $query->where($db->quoteName('a.extension') . ' LIKE :extension')
                 ->bind(':extension', $extension);
         }
@@ -345,7 +344,7 @@ class ActionlogsModel extends ListModel
             return false;
         }
 
-        $this->getDispatcher()->dispatch('onAfterLogPurge', new AfterLogPurgeEvent('onAfterLogPurge'));
+        Factory::getApplication()->triggerEvent('onAfterLogPurge', []);
 
         return true;
     }
@@ -365,7 +364,7 @@ class ActionlogsModel extends ListModel
             return false;
         }
 
-        $this->getDispatcher()->dispatch('onAfterLogPurge', new AfterLogPurgeEvent('onAfterLogPurge'));
+        Factory::getApplication()->triggerEvent('onAfterLogPurge', []);
 
         return true;
     }

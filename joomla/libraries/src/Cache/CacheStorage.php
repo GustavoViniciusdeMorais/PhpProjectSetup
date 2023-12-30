@@ -11,7 +11,7 @@ namespace Joomla\CMS\Cache;
 
 use Joomla\CMS\Cache\Exception\UnsupportedCacheException;
 use Joomla\CMS\Factory;
-use Joomla\Filesystem\Path;
+use Joomla\CMS\Filesystem\Path;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('_JEXEC') or die;
