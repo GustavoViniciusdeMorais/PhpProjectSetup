@@ -10,8 +10,8 @@ services:
         volumes:
             - ./:/var/www/html
         container_name: gusphp
-        # depends_on:
-        #     - mysql
+        depends_on:
+            - postgres
         #     - mailhog_yii
         networks:
             gus-php-network:
