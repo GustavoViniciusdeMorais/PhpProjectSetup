@@ -14,7 +14,25 @@ services:
         #     - mysql
         #     - mailhog_yii
         networks:
-            - gus-php-network
+            gus-php-network:
+                ipv4_address: 12.0.0.8
+
+
+    postgres:
+        image: postgres
+        restart: always
+        container_name: postgres
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+        networks:
+            gus-php-network:
+                ipv4_address: 12.0.0.7
 
     # mysql:
     #     image: mysql:5.7

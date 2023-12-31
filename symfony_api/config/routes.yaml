@@ -1,4 +1,9 @@
 controllers:
     resource:
-        path: '../src/Core/*/Controller/*'
-    type: type
+        path: '../src/Core/'
+        namespace: App\Core
+    type: attribute
+
+kernel:
+    resource: App\Kernel
+    type: attribute

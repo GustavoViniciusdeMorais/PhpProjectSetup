@@ -3,6 +3,7 @@
 namespace App\Core\ProductBundle\Controller;
 
 use FOS\RestBundle\Controller\AbstractFOSRestController;
+use FOS\RestBundle\Controller\Annotations as Rest;
 
 class DefaultController extends AbstractFOSRestController
 {
@@ -12,5 +13,8 @@ class DefaultController extends AbstractFOSRestController
      */
     public function testRoute()
     {
+        return $this->json([
+            "data" => "data"
+        ]);
     }
 }
