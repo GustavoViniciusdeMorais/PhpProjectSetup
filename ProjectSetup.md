@@ -37,6 +37,31 @@ orm:
         alias: Product
 ```
 
+### Config PostgreSQL connection
+docker-compose.yaml
+```
+services:
+    postgres:
+        image: postgres
+        restart: always
+        container_name: postgres
+        ports:
+            - 5432:5432
+        environment:
+            - POSTGRES_DB=postgres
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=postgres
+        volumes:
+            - ./data/db:/var/lib/postgresql/data
+        networks:
+            gus-php-network:
+                ipv4_address: 12.0.0.7
+```
+symfony_api/.env
+```
+DATABASE_URL="postgresql://postgres/postgres?user=postgres&password=postgres"
+```
+
 ### Migrate
 ```sh
 php bin/console doctrine:migrations:migrate
