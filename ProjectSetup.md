@@ -102,3 +102,7 @@ class AppFixtures extends Fixture
 php bin/console doctrine:fixtures:load
 php bin/console dbal:run-sql 'SELECT * FROM product'
 ```
+### Run tests
+```sh
+php bin/phpunit
+```
