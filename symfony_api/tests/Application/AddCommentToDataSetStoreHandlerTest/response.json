@@ -1,0 +1,9 @@
+{
+    "status": "success",
+    "message": "Operation success",
+    "data": {
+        "userId": "asf-123-asdf",
+        "topicId": "asf-123-asdf",
+        "comment": "Some text"
+    }
+}
