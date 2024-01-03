@@ -10,6 +10,6 @@ class AddCommentToDataSetStoreHandlerTest extends WebTestCase
     /** @test */
     public function ItHandlesComment()
     {
-
+        $request = file_get_contents(__DIR__ . '/AddCommentToDataSetStoreHandlerTest/request.json');
     }
 }
