@@ -13,6 +13,7 @@
         "doctrine/orm": "^2.11.0",
         "friendsofsymfony/rest-bundle": "^3.6",
         "jms/serializer-bundle": "^5.4",
+        "php-amqplib/rabbitmq-bundle": "^2.13",
         "symfony/console": "6.3.*",
         "symfony/dotenv": "6.3.*",
         "symfony/flex": "^2",
