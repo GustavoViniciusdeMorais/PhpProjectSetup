@@ -36,7 +36,11 @@ services:
                 ipv4_address: 12.0.0.7
 
     my_rabbitmq:
-        image: rabbitmq
+        build:
+            context: .
+            dockerfile: rabbitmq.dockerfile
+        volumes:
+            - ./rabbitmq:/gusrabbitmq
         container_name: my_rabbitmq
         environment:
             - RABBITMQ_DEFAULT_USER=rabbit
