@@ -27,6 +27,12 @@ doctrine:
                 dir: '%kernel.project_dir%/src/Core/ProductBundle/Entity'
                 prefix: 'App\Core\ProductBundle\Entity'
                 alias: Product
+            Comment:
+                type: attribute
+                is_bundle: false
+                dir: '%kernel.project_dir%/src/Core/CommentBundle/Infrastructure/config/orm'
+                prefix: 'App\Core\CommentBundle\Entity'
+                alias: Comment
 
 when@test:
     doctrine:
