@@ -21,12 +21,12 @@ doctrine:
             #     dir: '%kernel.project_dir%/src/Entity'
             #     prefix: 'App\Entity'
             #     alias: App
-            Product:
-                type: attribute
-                is_bundle: false
-                dir: '%kernel.project_dir%/src/Core/ProductBundle/Entity'
-                prefix: 'App\Core\ProductBundle\Entity'
-                alias: Product
+            # Product:
+            #     type: attribute
+            #     is_bundle: false
+            #     dir: '%kernel.project_dir%/src/Core/ProductBundle/Entity'
+            #     prefix: 'App\Core\ProductBundle\Entity'
+            #     alias: Product
             Comment:
                 type: attribute
                 is_bundle: false
