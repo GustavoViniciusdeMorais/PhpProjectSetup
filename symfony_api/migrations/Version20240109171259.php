@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20240108172033 extends AbstractMigration
+final class Version20240109171259 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,7 +20,10 @@ final class Version20240108172033 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SCHEMA comments');
+        $this->addSql('CREATE SEQUENCE comments.comments_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE SEQUENCE product_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE TABLE comments.comments (id INT NOT NULL, user_id VARCHAR(255) NOT NULL, topc_id VARCHAR(255) NOT NULL, comment TEXT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE product (id INT NOT NULL, name VARCHAR(255) NOT NULL, price INT NOT NULL, PRIMARY KEY(id))');
     }
 
@@ -28,7 +31,9 @@ final class Version20240108172033 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
+        $this->addSql('DROP SEQUENCE comments.comments_id_seq CASCADE');
         $this->addSql('DROP SEQUENCE product_id_seq CASCADE');
+        $this->addSql('DROP TABLE comments.comments');
         $this->addSql('DROP TABLE product');
     }
 }

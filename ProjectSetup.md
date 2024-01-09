@@ -62,6 +62,13 @@ symfony_api/.env
 DATABASE_URL="postgresql://postgres/postgres?user=postgres&password=postgres"
 ```
 
+### Create migrations
+With previous database state
+```sh
+rm -rf migrations/Version202*
+php bin/console doctrine:migrations:diff
+```
+
 ### Migrate
 ```sh
 php bin/console doctrine:migrations:migrate

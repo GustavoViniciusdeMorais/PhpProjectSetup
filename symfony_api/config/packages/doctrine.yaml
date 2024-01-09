@@ -28,10 +28,10 @@ doctrine:
             #     prefix: 'App\Core\ProductBundle\Entity'
             #     alias: Product
             Comment:
-                type: attribute
+                type: xml
                 is_bundle: false
                 dir: '%kernel.project_dir%/src/Core/CommentBundle/Infrastructure/config/orm'
-                prefix: 'App\Core\CommentBundle\Entity'
+                prefix: 'App\Core\CommentBundle\Domain\Entity'
                 alias: Comment
 
 when@test:

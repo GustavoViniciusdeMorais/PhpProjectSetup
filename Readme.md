@@ -24,4 +24,5 @@ composer init
 - GraphQL
 - Docker
 ### Project Setup
-[Setup instructions](./ProjectSetup.md)
+- [Setup instructions](./ProjectSetup.md)
+- [Config Entity Repository](./ConfigEntityRepository.md)
