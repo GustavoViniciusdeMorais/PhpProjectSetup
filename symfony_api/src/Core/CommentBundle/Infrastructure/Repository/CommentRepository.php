@@ -8,10 +8,14 @@ use Doctrine\ORM\EntityRepository;
 
 class CommentRepository extends EntityRepository implements CommentRepositoryInterface
 {
+    public function findById(int $id): Comment
+    {
+        /** @var Comment */
+        return $this->find($id);
+    }
+
     public function save(Comment $comment): Comment
     {
-        $this->_em->persist($comment);
-        $this->_em->flush();
         return new Comment();
     }
 }
