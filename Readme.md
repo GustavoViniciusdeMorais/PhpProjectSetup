@@ -9,17 +9,6 @@ composer.sh
 
 composer init
 ```
-
-### Configs
-```
-apt-get update
-apt-get install php8.1-mbstring -y
-apt-get install php8.1-xml -y
-apt-get install php8.1-fpm -y
-apt-get install php8.1-soap -y
-```
-[Soap Tutorial](./Soap.md)
-
 ### PHP Doc Function
 Example:
 ```php
