@@ -6,7 +6,7 @@ use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use App\Core\BasicBundle\Message\MessageProducer;
 use Symfony\Component\HttpFoundation\Response;
-use App\Core\BasicBundle\Message\SampleMessage;
+use Symfony\Component\HttpFoundation\Request;
 
 class DefaultController extends AbstractFOSRestController
 {
@@ -21,11 +21,15 @@ class DefaultController extends AbstractFOSRestController
     }
 
     /**
-     * @Rest\Get("/sample", name="sample_message")
+     * @Rest\Post("/api/sample", name="api_sample_message")
      */
-    public function sample(MessageProducer $producer): Response
+    public function sample(Request $request, MessageProducer $producer): Response
     {
-        $producer->produce("test message");
+        $content = $request->getContent();
+        $data = json_decode($content, true);
+        $message = $data['message'] ?? 'default message';
+        $producer->produce($message);
+
         return new Response('Message sent to queue');
     }
 }

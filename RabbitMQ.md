@@ -23,3 +23,9 @@ php bin/console doctrine:migrations:migrate
 ### Tutorials about consumer and producer with symfony and rabbitmq commands
 - [Create producre and consumer scripts](./ProducerConsumerRabbitMQScripts.md)
 - [RabbitMQ commands](./RabbitMQCliCommands.md)
+- [Symfony Post route and curl](./SymfonyPostRequestControllerTerminalCurlExample.md)
+
+### Send message to API
+```sh
+curl -X POST http://localhost/api/sample -H "Content-Type: application/json" -d '{"message": "hello rabbit"}'
+```

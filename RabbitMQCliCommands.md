@@ -86,4 +86,15 @@ rabbitmqadmin get queue=my_queue
 
 This command retrieves and prints a message from the `my_queue` queue.
 
+
+To clean (purge) all messages from a RabbitMQ queue using `rabbitmqadmin`, you can use the following command:
+
+```bash
+rabbitmqadmin purge queue name=<your_queue_name>
+```
+
+Replace `<your_queue_name>` with the actual name of the queue from which you want to remove all messages.
+
+Please note that this operation will remove all messages from the specified queue. Make sure to use it carefully, especially in a production environment, as this action is not reversible.
+
 Make sure to adapt the names and configurations based on your specific requirements. These commands assume that you have the RabbitMQ admin command-line tool (`rabbitmqadmin`) installed and configured on your system. Adjust the paths and authentication details if needed.
