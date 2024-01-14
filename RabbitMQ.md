@@ -21,7 +21,7 @@ php bin/console doctrine:migrations:migrate
 ```
 
 ### Tutorials about consumer and producer with symfony and rabbitmq commands
-- [Create producre and consumer scripts](./ProducerConsumerRabbitMQScripts.md)
+- [Create producer and consumer scripts](./ProducerConsumerRabbitMQScripts.md)
 - [RabbitMQ commands](./RabbitMQCliCommands.md)
 - [Symfony Post route and curl](./SymfonyPostRequestControllerTerminalCurlExample.md)
 
