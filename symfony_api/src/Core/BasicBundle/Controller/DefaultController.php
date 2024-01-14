@@ -4,7 +4,7 @@ namespace App\Core\BasicBundle\Controller;
 
 use FOS\RestBundle\Controller\AbstractFOSRestController;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Symfony\Component\Messenger\MessageBusInterface;
+use App\Core\BasicBundle\Message\MessageProducer;
 use Symfony\Component\HttpFoundation\Response;
 use App\Core\BasicBundle\Message\SampleMessage;
 
@@ -23,9 +23,9 @@ class DefaultController extends AbstractFOSRestController
     /**
      * @Rest\Get("/sample", name="sample_message")
      */
-    public function sample(MessageBusInterface $bus): Response
+    public function sample(MessageProducer $producer): Response
     {
-        $bus->dispatch(new SampleMessage('test message'));
+        $producer->produce("test message");
         return new Response('Message sent to queue');
     }
 }

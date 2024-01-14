@@ -12,18 +12,22 @@ services:
         container_name: gusphp
         depends_on:
             - postgres
-            # - my_rabbitmq
-            - rabbitmq
+            - my_rabbitmq
+            # - rabbitmq
         #     - mailhog_yii
         networks:
             gus-php-network:
                 ipv4_address: 12.0.0.8
 
-    rabbitmq:
+    my_rabbitmq:
         image: rabbitmq:3.9-management
+        container_name: my_rabbitmq
         ports:
             - '5672:5672'
             - '15672:15672'
+        networks:
+            gus-php-network:
+                ipv4_address: 12.0.0.9
 
     postgres:
         image: postgres
