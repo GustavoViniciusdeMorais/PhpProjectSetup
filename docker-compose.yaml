@@ -12,12 +12,18 @@ services:
         container_name: gusphp
         depends_on:
             - postgres
-            - my_rabbitmq
+            # - my_rabbitmq
+            - rabbitmq
         #     - mailhog_yii
         networks:
             gus-php-network:
                 ipv4_address: 12.0.0.8
 
+    rabbitmq:
+        image: rabbitmq:3.9-management
+        ports:
+            - '5672:5672'
+            - '15672:15672'
 
     postgres:
         image: postgres
@@ -35,19 +41,19 @@ services:
             gus-php-network:
                 ipv4_address: 12.0.0.7
 
-    my_rabbitmq:
-        build:
-            context: .
-            dockerfile: rabbitmq.dockerfile
-        volumes:
-            - ./rabbitmq:/gusrabbitmq
-        container_name: my_rabbitmq
-        environment:
-            - RABBITMQ_DEFAULT_USER=rabbit
-            - RABBITMQ_DEFAULT_PASS=rabbit
-        ports:
-            - "5672:5672"
-            - "15672:15672"
+    # my_rabbitmq:
+    #     build:
+    #         context: .
+    #         dockerfile: rabbitmq.dockerfile
+    #     volumes:
+    #         - ./rabbitmq:/gusrabbitmq
+    #     container_name: my_rabbitmq
+    #     environment:
+    #         - RABBITMQ_DEFAULT_USER=rabbit
+    #         - RABBITMQ_DEFAULT_PASS=rabbit
+    #     ports:
+    #         - "5672:5672"
+    #         - "15672:15672"
 
     # mysql:
     #     image: mysql:5.7

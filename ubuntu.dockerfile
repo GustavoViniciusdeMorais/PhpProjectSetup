@@ -1,4 +1,4 @@
-FROM gustavovinicius/gusphp:symfony63
+FROM gustavovinicius/gusphp:symfony63rabbitmq
 
 # RUN apt update
 
