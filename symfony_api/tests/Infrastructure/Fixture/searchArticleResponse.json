@@ -1,0 +1,16 @@
+{
+    "status": "success",
+    "message": "Processed with success",
+    "data": [
+        {
+            "id": 1,
+            "title": "Some title",
+            "content": "Some content",
+            "author": "John Doe",
+            "created_at": "01/01/2024",
+            "updated_at": "01/01/2024",
+            "deleted_at": "",
+            "comments": []
+        }
+    ]
+}
