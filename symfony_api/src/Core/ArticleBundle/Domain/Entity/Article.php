@@ -4,15 +4,15 @@ namespace App\Core\ArticleBundle\Domain\Entity;
 
 class Article
 {
-    private $id;
+    private string $id;
     private $title;
     private $content;
     private $author;
-    private $created_at;
-    private $updated_at;
-    private $deleted_at;
+    private \DateTimeImmutable $created_at;
+    private \DateTimeImmutable $updated_at;
+    private \DateTimeImmutable $deleted_at;
 
-    public function getId(): int
+    public function getId(): ?string
     {
         return $this->id;
     }
@@ -52,33 +52,39 @@ class Article
         $this->author = $author;
     }
 
-    public function getCreatedAt(): string
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(string $created_at): void
+    public function setCreatedAt(\DateTimeImmutable $created_at): self
     {
         $this->created_at = $created_at;
+
+        return $this;
     }
 
-    public function getUpdatedAt(): string
+    public function getUpdatedAt(): ?\DateTimeImmutable
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(string $updated_at): void
+    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
     {
         $this->updated_at = $updated_at;
+
+        return $this;
     }
 
-    public function getDeletedAt(): string
+    public function getDeletedAt(): ?\DateTimeImmutable
     {
         return $this->deleted_at;
     }
 
-    public function setDeletedAt(string $deleted_at): void
+    public function setDeletedAt(\DateTimeImmutable $deleted_at): self
     {
         $this->deleted_at = $deleted_at;
+
+        return $this;
     }
 }

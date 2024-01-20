@@ -27,12 +27,18 @@ doctrine:
             #     dir: '%kernel.project_dir%/src/Core/ProductBundle/Entity'
             #     prefix: 'App\Core\ProductBundle\Entity'
             #     alias: Product
-            Comment:
+            # Comment:
+            #     type: xml
+            #     is_bundle: false
+            #     dir: '%kernel.project_dir%/src/Core/CommentBundle/Infrastructure/config/orm'
+            #     prefix: 'App\Core\CommentBundle\Domain\Entity'
+            #     alias: Comment
+            Article:
                 type: xml
                 is_bundle: false
-                dir: '%kernel.project_dir%/src/Core/CommentBundle/Infrastructure/config/orm'
-                prefix: 'App\Core\CommentBundle\Domain\Entity'
-                alias: Comment
+                dir: '%kernel.project_dir%/src/Core/ArticleBundle/Infrastructure/DoctrineMapping/'
+                prefix: 'App\Core\ArticleBundle\Domain\Entity'
+                alias: Article
 
 when@test:
     doctrine:
