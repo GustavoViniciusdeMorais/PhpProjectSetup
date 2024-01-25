@@ -2,6 +2,8 @@
 
 namespace App\Core\ArticleBundle\Domain\Entity;
 
+use Ramsey\Uuid\Uuid;
+
 class Article
 {
     private string $id;
@@ -12,10 +14,16 @@ class Article
     private \DateTimeImmutable $updated_at;
     private \DateTimeImmutable $deleted_at;
 
-    public function getId(): ?string
+    public function __construct()
     {
-        return $this->id;
+        $this->id = Uuid::uuid4();
     }
+
+    public function getId(): ?ArticleId
+    {
+        return new ArticleId($this->id);
+    }
+
 
     public function setId(int $id): void
     {

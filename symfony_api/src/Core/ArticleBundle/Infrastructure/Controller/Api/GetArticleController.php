@@ -29,6 +29,7 @@ class GetArticleController extends AbstractController
 
     public function __invoke(string $id): JsonResponse
     {
+        // print_r(json_encode(['test']));echo "\n\n";exit;
         $article = $this->articleRepository->find($id);
         return JsonResponse::fromJsonString($article);
     }
