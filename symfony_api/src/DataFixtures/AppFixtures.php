@@ -27,8 +27,9 @@ class AppFixtures extends Fixture
         $article->setTitle("Some title");
         $article->setContent("Some content");
         $article->setAuthor("John Doe");
-        $article->setCreatedAt(new \DateTimeImmutable("01-01-2024"));
-        $article->setUpdatedAt(new \DateTimeImmutable("01-01-2024"));
+        $article->setCreatedAt(new \DateTime("01-01-2024"));
+        $article->setUpdatedAt(new \DateTime("01-01-2024"));
+        $article->setDeletedAt(new \DateTime("01-01-2024"));
         $manager->persist($article);
         return $manager;
     }

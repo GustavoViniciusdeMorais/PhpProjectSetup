@@ -2,26 +2,19 @@
 
 namespace App\Core\ArticleBundle\Domain\Entity;
 
-use Ramsey\Uuid\Uuid;
-
 class Article
 {
-    private string $id;
+    private int $id;
     private $title;
     private $content;
     private $author;
-    private \DateTimeImmutable $created_at;
-    private \DateTimeImmutable $updated_at;
-    private \DateTimeImmutable $deleted_at;
+    private \DateTime $created_at;
+    private \DateTime $updated_at;
+    private \DateTime $deleted_at;
 
-    public function __construct()
+    public function getId(): int
     {
-        $this->id = Uuid::uuid4();
-    }
-
-    public function getId(): ?ArticleId
-    {
-        return new ArticleId($this->id);
+        return $this->id;
     }
 
 
@@ -60,36 +53,36 @@ class Article
         $this->author = $author;
     }
 
-    public function getCreatedAt(): ?\DateTimeImmutable
+    public function getCreatedAt(): ?\DateTime
     {
         return $this->created_at;
     }
 
-    public function setCreatedAt(\DateTimeImmutable $created_at): self
+    public function setCreatedAt(\DateTime $created_at): self
     {
         $this->created_at = $created_at;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeImmutable
+    public function getUpdatedAt(): ?\DateTime
     {
         return $this->updated_at;
     }
 
-    public function setUpdatedAt(\DateTimeImmutable $updated_at): self
+    public function setUpdatedAt(\DateTime $updated_at): self
     {
         $this->updated_at = $updated_at;
 
         return $this;
     }
 
-    public function getDeletedAt(): ?\DateTimeImmutable
+    public function getDeletedAt(): ?\DateTime
     {
         return $this->deleted_at;
     }
 
-    public function setDeletedAt(\DateTimeImmutable $deleted_at): self
+    public function setDeletedAt(\DateTime $deleted_at): self
     {
         $this->deleted_at = $deleted_at;
 

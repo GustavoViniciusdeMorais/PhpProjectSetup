@@ -26,3 +26,5 @@ composer init
 ### Project Setup
 - [Setup instructions](./ProjectSetup.md)
 - [Config Entity Repository](./ConfigEntityRepository.md)
+
+![Example](./images/TreeHexagonalExample.png)
