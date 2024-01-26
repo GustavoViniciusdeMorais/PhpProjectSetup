@@ -9,6 +9,9 @@ composer.sh
 
 composer init
 ```
+
+<img src="./images/HexagonalMap.png" width="600" height="400" />
+
 ### Projet Tech Stack
 - [Symfony Framework](https://symfony.com/doc/6.3/setup.html)
 - [Bundle System](https://symfony.com/doc/6.3/bundles.html)
