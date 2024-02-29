@@ -1,5 +1,4 @@
-Certainly! Below is an example of creating an exchange, a queue, and binding the exchange to the queue using RabbitMQ CLI commands.
-
+# RabbitMQ Comands Example
 
 ### Requirement
 Requires the docker container rabbitmq:3.9-management.
