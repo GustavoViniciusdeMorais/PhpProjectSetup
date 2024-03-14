@@ -1,4 +1,4 @@
-FROM gustavovinicius/gusphp:latest
+FROM gustavovinicius/gusphp:81
 
 # RUN apt update
 
