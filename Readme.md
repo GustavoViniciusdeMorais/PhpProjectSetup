@@ -10,4 +10,5 @@ composer.sh
 composer init
 ```
 ### Stack
-- [Cake PHP](https://book.cakephp.org/4/en/quickstart.html)
+- [Cake PHP v4.5](https://book.cakephp.org/4/en/quickstart.html)
+- [Config project](./ConfigProject.md)

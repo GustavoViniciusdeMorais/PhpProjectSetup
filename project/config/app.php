@@ -75,8 +75,10 @@ return [
      *   You should treat it as extremely sensitive data.
      */
     'Security' => [
-        'salt' => env('SECURITY_SALT'),
+        'salt' => 'safasfsdf',
     ],
+
+    'DEBUG' => true,
 
     /*
      * Apply timestamps with the last modified time to static assets (js, css, images).
