@@ -11,7 +11,7 @@ source /var/lib/mysql/databaseSchema.sql;
 
 ### config/app_local.php
 ```sh
-sudo cat config/app_local.example.php config/app_local.php
+sudo cat config/app_local.example.php > config/app_local.php
 ```
 ```php
 'Security' => [
@@ -33,4 +33,23 @@ sudo cat config/app_local.example.php config/app_local.php
         'cacheMetadata' => true,
     ],
 ]
+```
+
+### Create model and controller
+```sh
+php bin/cake.php bake model Article --table articles
+php bin/cake.php bake controller Articles
+```
+
+### Insert articles
+```sql
+INSERT INTO articles (user_id, title, slug, body, published, created, modified) VALUES
+(1, 'First Article', 'first-article', 'This is the body of the first article.', TRUE, NOW(), NOW()),
+(1, 'Second Article', 'second-article', 'This is the body of the second article.', TRUE, NOW(), NOW()),
+(1, 'Third Article', 'third-article', 'This is the body of the third article.', FALSE, NOW(), NOW());
+```
+
+### Get article
+```sh
+curl -X GET http://localhost/articles/view/first-article
 ```
