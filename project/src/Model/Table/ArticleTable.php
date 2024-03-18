@@ -7,6 +7,8 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Utility\Text;
+use Cake\Event\EventInterface;
 
 /**
  * Article Model
@@ -108,5 +110,14 @@ class ArticleTable extends Table
         $rules->add($rules->existsIn('user_id', 'Users'), ['errorField' => 'user_id']);
 
         return $rules;
+    }
+
+    public function beforeSave(EventInterface $event, $entity, $options)
+    {
+        if ($entity->isNew() && !$entity->slug) {
+            $sluggedTitle = Text::slug($entity->title);
+            // trim slug to maximum length defined in schema
+            $entity->slug = substr($sluggedTitle, 0, 191);
+        }
     }
 }
