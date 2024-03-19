@@ -114,10 +114,12 @@ class ArticleTable extends Table
 
     public function beforeSave(EventInterface $event, $entity, $options)
     {
+        print_r(json_encode(['title' => $entity->title]));echo "\n\n";exit;
         if ($entity->isNew() && !$entity->slug) {
             $sluggedTitle = Text::slug($entity->title);
             // trim slug to maximum length defined in schema
             $entity->slug = substr($sluggedTitle, 0, 191);
+            print_r(json_encode(['slug' => $entity->slug]));echo "\n\n";exit;
         }
     }
 }

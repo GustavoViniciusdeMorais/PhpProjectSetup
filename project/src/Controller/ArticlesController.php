@@ -10,6 +10,8 @@ namespace App\Controller;
  */
 class ArticlesController extends AppController
 {
+    public $uses = ['Article'];
+
     public function initialize(): void
     {
         parent::initialize();
@@ -19,6 +21,7 @@ class ArticlesController extends AppController
     }
     public function index()
     {
+        // print_r(json_encode(['asdfasdf']));echo "\n\n";exit;
         $articles = $this->Paginator->paginate($this->fetchModel('Article')->find('all'));
         // $articles = $this->fetchModel('Article')->find('all');
         $this->set(compact('articles'));
@@ -32,20 +35,24 @@ class ArticlesController extends AppController
 
     public function add()
     {
-        $article = $this->fetchModel('Article')->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $article = $this->fetchModel('Article')->patchEntity($article, $this->request->getData());
+        try{
+            $article = $this->fetchModel('Article')->newEmptyEntity();
+            if ($this->request->is('post')) {
+                $article = $this->fetchModel('Article')->patchEntity($article, $this->request->getData());
+                // Hardcoding the user_id is temporary, and will be removed later
+                // when we build authentication out.
+                $article->user_id = 1;
+                $article->slug = 'asfsdf';
 
-            // Hardcoding the user_id is temporary, and will be removed later
-            // when we build authentication out.
-            $article->user_id = 1;
-
-            if ($this->fetchModel('Article')->save($article)) {
-                $this->Flash->success(__('Your article has been saved.'));
-                return $this->redirect(['action' => 'index']);
+                if ($this->fetchModel('Article')->save($article)) {
+                    $this->Flash->success(__('Your article has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('Unable to add your article.'));
             }
-            $this->Flash->error(__('Unable to add your article.'));
+            $this->set('article', $article);
+        } catch (\Exception $e){
+            $this->Flash->error($e->getMessage());
         }
-        $this->set('article', $article);
     }
 }
