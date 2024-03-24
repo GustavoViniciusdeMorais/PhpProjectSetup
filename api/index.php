@@ -1,12 +1,3 @@
-# Slim Auth REST API
-
-```sh
-composer require slim/slim:"4.*"
-composer require guzzlehttp/psr7 "^2"
-```
-
-### Requests Manager
-```php
 <?php
 
 use Psr\Http\Message\ResponseInterface as Response;
@@ -22,6 +13,9 @@ $app->get('/', function (Request $request, Response $response, $args) {
     return $response;
 });
 
-$app->run();
+$app->get('/check', function (Request $request, Response $response, $args) {
+    $response->getBody()->write("OK!");
+    return $response;
+});
 
-```
+$app->run();
