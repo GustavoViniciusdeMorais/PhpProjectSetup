@@ -1,6 +1,12 @@
 {
+    "name": "auth/api",
     "require": {
         "slim/slim": "4.*",
         "guzzlehttp/psr7": "^2"
+    },
+    "autoload": {
+        "psr-4": {
+            "gustavo\\": "src/"
+        }
     }
 }
