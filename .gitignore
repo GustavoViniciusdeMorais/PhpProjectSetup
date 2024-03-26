@@ -1,3 +1,4 @@
 vendor
 data
 dockerDBData
+.phpunit.result.cache

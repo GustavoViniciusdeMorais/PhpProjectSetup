@@ -6,7 +6,15 @@
     },
     "autoload": {
         "psr-4": {
-            "gustavo\\": "src/"
+            "Gustavo\\": "src/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Gustavo\\Tests\\": "tests"
+        }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
     }
 }
