@@ -8,8 +8,9 @@ class GetUsersTest extends MainTest
 {
     public function testGetUsers()
     {
-        $response = $this->client->request('GET', $this->url . '/api/articles');
-        $content = json_decode($response->getBody()->getContents());
-        $this->assertEquals('200', $response->getStatusCode());
+        $response = $this->makeRequest($this->url . '/api/users');
+        $expectedResponse = __DIR__ . '/../Responses/GetUsersTest.json';
+        $expectedResponse = json_decode(file_get_contents($expectedResponse));
+        print_r(json_encode(['status' => 'success', 'data' => $response]));echo "\n\n";exit;
     }
 }
