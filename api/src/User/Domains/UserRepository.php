@@ -1,11 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace Gustavo\User\Domains;
+namespace Auth\Api\User\Domains;
 
-interface UserRepository
+use Auth\Api\Common\Repositories\Repository;
+use stdClass;
+
+class UserRepository implements Repository
 {
-    /**
-     * @return User[]
-     */
-    public function findAll(): array;
+    public function save(object $entity): object
+    {
+        return new stdClass();
+    }
+
+    public function find(object $entity): object
+    {
+        return new stdClass();
+    }
 }

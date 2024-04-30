@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace Gustavo\Common\Application\Actions;
+namespace Auth\Api\Common\Application\Actions;
 
 use JsonSerializable;
 

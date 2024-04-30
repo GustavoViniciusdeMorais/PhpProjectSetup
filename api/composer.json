@@ -2,16 +2,17 @@
     "name": "auth/api",
     "require": {
         "slim/slim": "4.*",
-        "guzzlehttp/psr7": "^2"
+        "guzzlehttp/psr7": "^2.6",
+        "php-di/php-di": "^7.0"
     },
     "autoload": {
         "psr-4": {
-            "Gustavo\\": "src/"
+            "Auth\\Api\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Gustavo\\Tests\\": "tests"
+            "Auth\\Api\\Tests\\": "tests"
         }
     },
     "require-dev": {

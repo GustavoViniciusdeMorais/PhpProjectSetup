@@ -1,20 +1,22 @@
 <?php declare(strict_types=1);
 
-namespace Gustavo\User\Infrastructure\Actions;
+namespace Auth\Api\User\Infrastructure\Actions;
 
-use Psr\Http\Message\ResponseInterface as Response;
+use Auth\Api\Common\Application\Actions\Action;
 
-class ListUsersAction extends UserAction
+class ListUsersAction extends Action
 {
     /**
      * {@inheritdoc}
      */
-    protected function action(): Response
+    public function execute()
     {
-        $users = ["test"];
-
-        $this->logger->info('Users list was viewed.');
-
-        return $this->respondWithData($users);
+        return $this->respond(
+            [
+                'id' => 1,
+                'name' => 'John',
+            ],
+            'Success!'
+        );
     }
 }

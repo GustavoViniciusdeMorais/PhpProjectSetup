@@ -6,9 +6,11 @@ if [ $1 = "-h" ]
 then
     echo "Instructions:";
     echo "";
-    echo " 1- --start                         will start container by docker-compose file config";
-    echo " 1- --stop                          will stop container by docker-compose file config";
-    echo " 3- [container_name] [sh, bash]     will enter container with provided mode";
+    echo "Use v1 for docker-compose file config. New docker compose version does not need v1 flag.";
+    echo "";
+    echo " 1- --start [v1]                     will start container by docker-compose file config";
+    echo " 1- --stop [v1]                      will stop container by docker-compose file config";
+    echo " 3- [container_name] [sh, bash]      will enter container with provided mode";
     echo "";
 fi
 
@@ -37,7 +39,7 @@ then
             docker container stop $(docker container ls -aq) && docker network prune -f
         fi
 
-        if [ -n "$2" ]
+        if [ "$2" = "sh" ] || [ "$2" = "bash" ]
         then
             docker exec -it -u 0 $1 $2
         fi

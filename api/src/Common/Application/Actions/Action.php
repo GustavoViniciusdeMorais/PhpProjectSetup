@@ -1,86 +1,48 @@
 <?php
-declare(strict_types=1);
 
-namespace Gustavo\Common\Application\Actions;
+namespace Auth\Api\Common\Application\Actions;
 
-use Gustavo\Common\Domain\DomainException;
-use JsonException;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Psr\Log\LoggerInterface;
-use Slim\Exception\HttpBadRequestException;
-use Slim\Exception\HttpNotFoundException;
-
-use function json_encode;
-use function sprintf;
-
-use const JSON_PRETTY_PRINT;
-use const JSON_THROW_ON_ERROR;
+use Auth\Api\Common\Repositories\Repository;
 
 abstract class Action
 {
-    protected Request $request;
-    protected Response $response;
-    protected array $args;
+    private $data;
 
     public function __construct(
-        protected LoggerInterface $logger,
+        protected Repository $repository
     ) {
+        $this->repository = $repository;
     }
 
-    /**
-     * @throws HttpNotFoundException
-     * @throws HttpBadRequestException
-     */
     public function __invoke(Request $request, Response $response, array $args): Response
     {
-        $this->request = $request;
-        $this->response = $response;
-        $this->args = $args;
-
-        try {
-            return $this->action();
-        } catch (DomainException $e) {
-            throw new HttpNotFoundException($this->request, $e->getMessage(), $e);
-        }
+        $result = $this->execute();
+        $response->getBody()->write($result);
+        return $response;
     }
 
-    /**
-     * @throws DomainException
-     * @throws HttpBadRequestException
-     */
-    abstract protected function action(): Response;
+    abstract public function execute();
 
-    /**
-     * @throws HttpBadRequestException
-     */
-    protected function resolveArg(string $name): mixed
+    public function setData($data)
     {
-        if (!isset($this->args[$name])) {
-            throw new HttpBadRequestException($this->request, sprintf('Could not resolve argument `%s`.', $name));
-        }
-
-        return $this->args[$name];
+        $this->data = $data;
+        return $this;
     }
 
-    /**
-     * @param object|array|null $data
-     * @throws JsonException
-     */
-    protected function respondWithData(object|array $data = null, int $statusCode = 200): Response
+    public function getData()
     {
-        $payload = new ActionPayload($statusCode, $data);
-
-        return $this->respond($payload);
+        return $this->data;
     }
 
-    protected function respond(ActionPayload $payload): Response
-    {
-        $json = json_encode($payload, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT);
-        $this->response->getBody()->write($json);
-
-        return $this->response
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus($payload->getStatusCode());
+    public function respond(
+        $data = false,
+        $message = "Something went wrong. More info in the logs."
+    ) {
+        return json_encode([
+           "message" => $message,
+           "data" => $data
+        ]);
     }
 }

@@ -1,8 +1,8 @@
 <?php
 
-namespace Gustavo\Tests\Users;
+namespace Auth\Api\Tests\Users;
 
-use Gustavo\Tests\MainTest;
+use Auth\Api\Tests\MainTest;
 
 class GetUsersTest extends MainTest
 {

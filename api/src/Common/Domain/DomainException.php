@@ -1,6 +1,6 @@
 <?php
 
-namespace Gustavo\Common\Domain;
+namespace Auth\Api\Common\Domain;
 
 use Exception;
 

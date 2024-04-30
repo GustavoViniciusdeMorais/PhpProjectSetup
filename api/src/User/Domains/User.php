@@ -1,6 +1,6 @@
 <?php
 
-namespace Gustavo\Domains\Users\Entities;
+namespace Auth\Api\Domains\Users\Entities;
 
 class User
 {

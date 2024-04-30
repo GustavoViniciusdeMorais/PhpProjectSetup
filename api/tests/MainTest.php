@@ -1,6 +1,6 @@
 <?php
 
-namespace Gustavo\Tests;
+namespace Auth\Api\Tests;
 
 use PHPUnit\Framework\TestCase;
 
