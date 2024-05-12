@@ -3,7 +3,10 @@
     "require": {
         "slim/slim": "4.*",
         "guzzlehttp/psr7": "^2.6",
-        "php-di/php-di": "^7.0"
+        "php-di/php-di": "^7.0",
+        "doctrine/orm": "^2.10",
+        "doctrine/dbal": "^3.0",
+        "doctrine/doctrine-bundle": "^2.4"
     },
     "autoload": {
         "psr-4": {

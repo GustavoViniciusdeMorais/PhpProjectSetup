@@ -18,5 +18,9 @@ class ListUsersAction extends Action
             ],
             'Success!'
         );
+        // return $this->respond(
+        //     $this->repository->findAll(),
+        //     'Success!'
+        // );
     }
 }
