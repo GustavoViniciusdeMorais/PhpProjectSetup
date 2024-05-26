@@ -3,7 +3,7 @@
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\Setup;
 use DI\ContainerBuilder;
-use Auth\Api\Domains\User;
+use Auth\Api\User\Domains\User;
 use Auth\Api\User\Infrastructure\Repositories\UserRepository;
 use Auth\Api\Common\Repositories\Repository;
 use Psr\Container\ContainerInterface;

@@ -2,7 +2,7 @@
 
 namespace Auth\Api\User\Infrastructure\Repositories;
 
-use Auth\Api\Domains\User;
+use Auth\Api\User\Domains\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Auth\Api\Common\Repositories\Repository;
 

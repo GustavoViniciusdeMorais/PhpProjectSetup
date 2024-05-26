@@ -12,15 +12,8 @@ class ListUsersAction extends Action
     public function execute()
     {
         return $this->respond(
-            [
-                'id' => 1,
-                'name' => 'John',
-            ],
+            $this->repository->findAll(),
             'Success!'
         );
-        // return $this->respond(
-        //     $this->repository->findAll(),
-        //     'Success!'
-        // );
     }
 }
