@@ -72,12 +72,45 @@ services:
       - "6379:6379"
 ```
 
+### Configuration File
+Create a src/settings.php file to manage application settings, including the Redis connection details:
+```php
+<?php
+
+return [
+    'settings' => [
+        'displayErrorDetails' => true,
+        'redis' => [
+            'scheme' => 'tcp',
+            'host' => 'redis',  // This is the service name defined in docker-compose.yml
+            'port' => 6379,
+        ],
+    ],
+];
+
+```
+
 #### 1.4. `public/index.php`
 ```php
 <?php
 require __DIR__ . '/../vendor/autoload.php';
 
 use Slim\Factory\AppFactory;
+use DI\Container;
+use Predis\Client;
+
+// Create Container using PHP-DI
+$container = new Container();
+AppFactory::setContainer($container);
+
+$settings = require __DIR__ . '/../src/settings.php';
+$container->set('settings', $settings);
+
+// Register Redis service
+$container->set('redis', function ($container) {
+    $settings = $container->get('settings')['redis'];
+    return new Client($settings);
+});
 
 $app = AppFactory::create();
 
@@ -133,8 +166,8 @@ $app->post('/login', function (Request $request, Response $response) {
         $secret = "supersecretkeyyoushouldnotcommittogithub";
         $token = \Firebase\JWT\JWT::encode($payload, $secret, "HS256");
 
-        // Save session in Redis
-        $redis = new Client();
+        // Get Redis instance from the container
+        $redis = $this->get('redis');
         $redis->set($jti, json_encode($payload), 'EX', 7200);
 
         $data["status"] = "success";
