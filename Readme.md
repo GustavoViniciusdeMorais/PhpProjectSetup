@@ -1,5 +1,7 @@
 # Gus PHP Setup Project
 
+-[Curl Requests](./curlRequests.md)
+
 ```
 chmod u+x phpInstall.sh
 
