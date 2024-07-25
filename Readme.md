@@ -1,6 +1,8 @@
 # Gus PHP Setup Project
 
-- [Curl Requests](./curlRequests.md)
+### Tutorials
+- [Curl Requests](./tutorials/curlRequests.md)
+- [PHP ML](./tutorials/php_ml.md)
 
 ```
 chmod u+x phpInstall.sh
