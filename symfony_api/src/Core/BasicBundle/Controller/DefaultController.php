@@ -25,11 +25,15 @@ class DefaultController extends AbstractFOSRestController
      */
     public function sample(Request $request, MessageProducer $producer): Response
     {
-        $content = $request->getContent();
-        $data = json_decode($content, true);
-        $message = $data['message'] ?? 'default message';
-        $producer->produce($message);
+        try {
+            $content = $request->getContent();
+            $data = json_decode($content, true);
+            $message = $data['message'] ?? 'default message';
+            $producer->produce($message);
 
-        return new Response('Message sent to queue');
+            return new Response('Message sent to queue');
+        } catch (\Exception $e) {
+            return new Response("Something went wrong");
+        }
     }
 }
