@@ -1,0 +1,21 @@
+{
+    "name": "gustavo/api",
+    "description": "PlayGround",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Gustavo\\Api\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Gustavo Morais"
+        }
+    ],
+    "require": {
+        "slim/slim": "4.*",
+        "slim/psr7": "*",
+        "guzzlehttp/psr7": "^2"
+    }
+}
