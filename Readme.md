@@ -4,6 +4,7 @@
 - [Curl Requests](./tutorials/curlRequests.md)
 - [Server Session](./tutorials/serverSession.md)
 - [PHP ML](./tutorials/php_ml.md)
+- [Enum example](./public/src/EnumExample.php)
 
 ```
 chmod u+x phpInstall.sh
