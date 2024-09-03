@@ -5,6 +5,7 @@
 - [Server Session](./tutorials/serverSession.md)
 - [PHP ML](./tutorials/php_ml.md)
 - [Enum example](./tutorials/enum.md)
+- [Json](./tutorials/json.md)
 
 ```
 chmod u+x phpInstall.sh
