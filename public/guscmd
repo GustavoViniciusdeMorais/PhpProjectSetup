@@ -1,0 +1,20 @@
+#!/usr/bin/env php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
+// Display welcome message
+echo "\nProject PHP Console (Interactive mode)\n";
+echo "Type 'exit' to quit\n\n";
+
+// Start interactive shell
+while (true) {
+    $line = readline('php> ');
+    if ($line === 'exit') break;
+    
+    try {
+        eval($line . ';');
+    } catch (Throwable $e) {
+        echo "ERROR: " . $e->getMessage() . "\n";
+    }
+}
