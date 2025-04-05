@@ -25,9 +25,6 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Slim\Factory\AppFactory;
 
-use Gustavo\Api\Config\Database\MyDatabase;
-$instance = MyDatabase::getInstance();
-
 try {
     // Create Slim App instance
     $app = AppFactory::create();
