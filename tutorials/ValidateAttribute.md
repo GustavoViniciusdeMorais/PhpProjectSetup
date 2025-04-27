@@ -23,6 +23,8 @@ Validator ..> ValidatePrice : uses
 
 @enduml
 ```
+### Image of diagram
+<img src="../images/ValidateAttribute.png" width="450" height="400" ><br>
 ### PHP Code Example
 ```php
 <?php
