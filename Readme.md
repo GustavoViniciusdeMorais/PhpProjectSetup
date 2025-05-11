@@ -7,6 +7,7 @@
 - [Enum example](./tutorials/enum.md)
 - [Validate Attribute](./tutorials/ValidateAttribute.md)
 - [Json](./tutorials/json.md)
+- [Modular Engine](./images/ModularEngine.png)
 
 ```
 chmod u+x phpInstall.sh
