@@ -50,9 +50,11 @@ echo "Encoded URL: " . $encodedUrl;
 ```
 ### TryCatch
 ```sh
+use Throwable;
+
 try {
   # code ...
-} catch (\Exception $e) {
+} catch (Throwable $e) {
    $response = [
        'message' => $e->getMessage(),
        'file' => $e->getFile(),
