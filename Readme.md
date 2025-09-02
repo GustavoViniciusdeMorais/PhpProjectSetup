@@ -64,3 +64,10 @@ try {
    ];
 }
 ```
+### Date diff for debugs
+```php
+$start = new \DateTime;
+$end = new \DateTime;
+$calc = $end->diff($start);
+echo $calc->format("%H:%I:%S");
+```
