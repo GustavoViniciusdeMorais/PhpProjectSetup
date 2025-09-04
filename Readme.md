@@ -71,3 +71,7 @@ $end = new \DateTime;
 $calc = $end->diff($start);
 echo $calc->format("%H:%I:%S");
 ```
+### Arrow func
+```php
+$calc = fn($a) => $a**2; echo $calc(3);
+```
