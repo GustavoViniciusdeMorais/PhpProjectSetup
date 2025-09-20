@@ -1,0 +1,27 @@
+#!/usr/bin/php
+<?php
+
+/*
+Enter the bash file folder
+Adjust the require vendor path if needed
+chmod u+x mybashphp
+./mybashphp arg1 arg2
+*/
+
+require '../vendor/autoload.php';
+
+echo "My Bash PHP\n";
+print_r($argv);
+echo "Illuminate Collection example:\n";
+
+$oses = new Illuminate\Support\Collection();
+
+$firstParam = $argv[1] ?? "None neither";
+
+$oses->push($firstParam);
+
+print_r(json_encode($oses->values()->toArray()));
+
+echo "\n\n";
+
+?>
