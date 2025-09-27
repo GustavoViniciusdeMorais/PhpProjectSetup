@@ -35,8 +35,6 @@ $oses->push(...$argv);
 
 print_r(json_encode($oses->values()->toArray()));
 
-$ended = new \DateTime();
-
 myDate();
 myMemory();
 
