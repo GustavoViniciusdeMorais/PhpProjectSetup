@@ -10,18 +10,34 @@ chmod u+x mybashphp
 
 require '../vendor/autoload.php';
 
-echo "My Bash PHP\n";
+echo "My Bash PHP by Gustavo Vinicius\n";
+
+function myMemory() {
+    $bytes = memory_get_usage();
+    echo "\nRAM allocated bytes: {$bytes}\n";
+}
+
+function myDate() {
+    $started = new \Datetime;
+    echo "Started: {$started->format('Y-m-d H:i:s')}\n";
+}
+
+myDate();
+myMemory();
+
 print_r($argv);
+
 echo "Illuminate Collection example:\n";
 
 $oses = new Illuminate\Support\Collection();
 
-$firstParam = $argv[1] ?? "None neither";
-
-$oses->push($firstParam);
+$oses->push(...$argv);
 
 print_r(json_encode($oses->values()->toArray()));
 
-echo "\n\n";
+$ended = new \DateTime();
+
+myDate();
+myMemory();
 
 ?>
