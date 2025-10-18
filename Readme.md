@@ -11,7 +11,7 @@
 - [Modular Engine](./images/ModularEngine.png)
 - [PHP Bash File](./public/src/mybashphp)
 
-```
+```bash
 chmod u+x phpInstall.sh
 
 ./phpInstall.sh
@@ -19,6 +19,10 @@ chmod u+x phpInstall.sh
 composer.sh
 
 composer init
+```
+### PHP CLI
+```bash
+php -r "print_r(strlen('linux'));" && echo ""
 ```
 ### PHP Doc Function
 Example:
