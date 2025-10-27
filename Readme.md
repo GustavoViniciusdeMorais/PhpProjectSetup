@@ -20,10 +20,6 @@ composer.sh
 
 composer init
 ```
-### PHP CLI
-```bash
-php -r "print_r(strlen('linux'));" && echo ""
-```
 ### PHP Doc Function
 Example:
 ```php
@@ -53,6 +49,10 @@ $url = "https://example.com?created>2015-09-01";
 $encodedUrl = urlencode($url);
 
 echo "Encoded URL: " . $encodedUrl;
+```
+### PHP CLI
+```bash
+php -r "print_r(strlen('linux'));" && echo ""
 ```
 ### TryCatch
 ```sh
