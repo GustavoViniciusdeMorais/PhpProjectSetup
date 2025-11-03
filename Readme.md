@@ -10,6 +10,7 @@
 - [Json](./tutorials/json.md)
 - [Modular Engine](./images/ModularEngine.png)
 - [PHP Bash File](./public/src/mybashphp)
+- [Code Snippets](./snippets_php.json)
 
 ```bash
 chmod u+x phpInstall.sh
