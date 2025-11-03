@@ -1,0 +1,53 @@
+{
+    "Print PHP": {
+        "prefix": "prx",
+        "body": [
+            "print_r(json_encode([$1]));echo \"\\n\\n\";exit;"
+        ],
+        "description": ""
+    },
+    "Return": {
+        "prefix": "rm",
+        "body": [
+            "return [\n\t\t'msg' => \\$e->getMessage(),\n\t\t'line' => \\$e->getLine(),\n\t\t'file' => \\$e->getFile(),\n\t\t'trace' => \\$e->getTrace()\n];"
+        ],
+        "description": ""
+    },
+    "v2fail": {
+        "prefix": "rm2",
+        "body": [
+            "return [",
+            "\t'status'=>'error',",
+            "\t'debug' => [",
+            "\t\t'error'=>\\$e->getMessage(),",
+            "\t\t'file'=>\\$e->getFile(),",
+            "\t\t'line'=>\\$e->getLine(),",
+            "\t\t'stack'=>\\$e->getTrace(),",
+            "\t]",
+            "];"
+        ]
+    },
+    "querydb": {
+        "prefix": "querydb",
+        "body": [
+            "\\DB::enableQueryLog();\nprint_r(json_encode(\\DB::getQueryLog()));exit;"
+        ],
+        "description": ""
+    },
+    "publicfunction": {
+        "prefix": "pb",
+        "body": [
+            "public function $1()\n{\n}"
+        ]
+    },
+    "privatefunction": {
+        "prefix": "pv",
+        "body": [
+            "private function $1()\n{\n}"
+        ]
+    },
+    "gt": {
+        "prefix": "gt",
+        "body": "\\$this->"
+    }
+}
