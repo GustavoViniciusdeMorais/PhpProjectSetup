@@ -21,6 +21,14 @@ $end = new \DateTime;
 $calc = $end->diff($start);
 echo $calc->format("%H:%I:%S");
 ```
+```php
+public static function sum(
+  int $a = 0,
+  int $b = 0
+): int {
+  return $a + $b;
+}
+```
 ### TryCatch
 ```sh
 use Throwable;
