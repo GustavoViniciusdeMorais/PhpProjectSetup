@@ -7,12 +7,15 @@ php -r "print_r(strlen('linux'));" && echo ""
 ```php
 $endpoint = "resource/{id}";
 print_r(str_replace(["{id}"], ["1"], $endpoint));
-
+```
+```php
 $value=null;
 echo $value ?? "empty";
-
+```
+```php
 $calc = fn($a) => $a**2; echo $calc(3);
-
+```
+```php
 $start = new \DateTime;
 $end = new \DateTime;
 $calc = $end->diff($start);
