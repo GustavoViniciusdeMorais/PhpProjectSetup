@@ -29,6 +29,11 @@ public static function sum(
   return $a + $b;
 }
 ```
+```php
+$pattern="/[^\w\d]/i"; $replace = "";
+$subject = "+55(62)98457-1233";
+$r = preg_replace($pattern, $replace, $subject);
+```
 ### TryCatch
 ```sh
 use Throwable;
