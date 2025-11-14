@@ -9,7 +9,7 @@ $endpoint = "resource/{id}";
 print_r(str_replace(["{id}"], ["1"], $endpoint));
 ```
 ```php
-$value=null;
+$value = null;
 echo $value ?? "empty";
 ```
 ```php
