@@ -1,4 +1,7 @@
 # Code Tips
+
+- [Json](./json.md)
+
 ### PHP CLI
 ```bash
 php -r "print_r(strlen('linux'));" && echo ""

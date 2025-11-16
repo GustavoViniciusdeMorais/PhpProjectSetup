@@ -2,7 +2,7 @@
 
 ### Tutorials
 - [Curl Requests](./tutorials/curlRequests.md)
-- [Code Tips](./code_tips.md)
+- [Code Tips](./tutorials/code_tips.md)
 - [Server Session](./tutorials/serverSession.md)
 - [Infrastructure](./infrastructure/main.md)
 - [PHP ML](./tutorials/php_ml.md)
