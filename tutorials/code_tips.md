@@ -25,7 +25,7 @@ $calc = $end->diff($start);
 echo $calc->format("%H:%I:%S");
 ```
 ```php
-public static function sum(
+abstract public static function sum(
   int $a = 0,
   int $b = 0
 ): int {
