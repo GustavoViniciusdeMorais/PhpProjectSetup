@@ -40,15 +40,16 @@ $r = preg_replace($pattern, $replace, $subject);
 ### TryCatch
 ```sh
 use Throwable;
+use Log;
 
 try {
   # code ...
 } catch (Throwable $e) {
-   $response = [
-       'message' => $e->getMessage(),
-       'file' => $e->getFile(),
-       'line' => $e->getLine(),
-       'Details' => $e->getTrace(),
-   ];
+   Log::error("System Module", [
+    'message' => $e->getMessage(),
+    'file' => $e->getFile(),
+    'line' => $e->getLine(),
+    'details' => $e->getTrace(),
+  ]);
 }
 ```
