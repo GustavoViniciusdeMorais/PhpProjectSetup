@@ -8,6 +8,9 @@ php -r "print_r(strlen('linux'));" && echo ""
 ```
 ### Usefull
 ```php
+print_r(json_encode(['data'=>'linux']));echo "\n\n";exit;
+```
+```php
 $endpoint = "resource/{id}";
 print_r(str_replace(["{id}"], ["1"], $endpoint));
 ```
