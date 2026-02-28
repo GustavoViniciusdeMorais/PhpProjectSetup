@@ -2,7 +2,9 @@
 
 ### Tutorials
 - [Curl Requests](./tutorials/curlRequests.md)
-- [Code Tips](./tutorials/code_tips.md)
+- [Daily Tips](./tutorials/daily_tips.md)
+- [Cognitive Complexity](./tutorials/cognitive_complexity.md)
+- [Value Object](./tutorials/ValueObject.md)
 - [Server Session](./tutorials/serverSession.md)
 - [Infrastructure](./infrastructure/main.md)
 - [PHP ML](./tutorials/php_ml.md)

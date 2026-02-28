@@ -8,6 +8,7 @@
 - A class can not have more then 200 lines of code
 
 ### Negative condition
+Give preference to negative conditions.
 ```php
 if (!$hasPermission) {
     throw new CustomException("system.default.error");
