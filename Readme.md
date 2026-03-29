@@ -3,6 +3,7 @@
 ### Tutorials
 - [Curl Requests](./tutorials/curlRequests.md)
 - [Daily Tips](./tutorials/daily_tips.md)
+- [Code Guidelines](./tutorials/coding_standards.md)
 - [Cognitive Complexity](./tutorials/cognitive_complexity.md)
 - [Value Object](./tutorials/ValueObject.md)
 - [Server Session](./tutorials/serverSession.md)
