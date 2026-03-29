@@ -4,8 +4,6 @@ The code style must follow [PSR-12](https://www.php-fig.org/psr/psr-12/).<br/>
 Requirements: PHP 8.0, Laravel 10.<br/>
 [Spatie PHP Guidelines](https://spatie.be/guidelines/php)
 
-### Class Standards
-
 ### Nullable and union types
 
 Whenever possible, use the short nullable notation for a type, instead of using a union of the type with `null`.
