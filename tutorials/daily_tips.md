@@ -31,6 +31,9 @@ $end = new \DateTime;
 $calc = $end->diff($start);
 echo $calc->format("%H:%I:%S");
 ```
+### Function definitions
+- Param accepts null (PSR 12)
+- [Call function with named args](https://wiki.php.net/rfc/named_params)
 ```php
 /**
 * @param int $a
@@ -39,11 +42,13 @@ echo $calc->format("%H:%I:%S");
 * @return int
 */
 abstract public static function sum(
-  int $a = 0,
-  int $b = 0
+  ?int $a = 0,
+  ?int $b = 0
 ): int {
   return $a + $b;
 }
+
+sum(a: 1, b: 2);
 ```
 ```php
 $pattern="/[^\w\d]/i"; $replace = "";
