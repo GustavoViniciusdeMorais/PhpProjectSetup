@@ -17,6 +17,8 @@ print_r(str_replace(["{id}"], ["1"], $endpoint));
 ```php
 $value = null;
 echo $value ?? "empty";
+// other ternary
+echo $value ?: "empty";
 ```
 ```php
 $calc = fn($a) => $a**2; echo $calc(3);
