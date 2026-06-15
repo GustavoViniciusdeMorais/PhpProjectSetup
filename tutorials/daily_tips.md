@@ -52,6 +52,13 @@ abstract public static function sum(
 
 sum(a: 1, b: 2);
 ```
+### Regex examples
+```php
+// clear phone number
+if (preg_match('/\d{1,4}\s\(\d{1,4}\)\s[\d\s-]+$/', $value)) {
+    return preg_replace('/\D*/', '', $value);
+}
+```
 ```php
 $pattern="/[^\w\d]/i"; $replace = "";
 $subject = "+55(62)98457-1233";
