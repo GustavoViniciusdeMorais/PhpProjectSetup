@@ -1,8 +1,10 @@
 # PHP Coding Standards
 
-The code style must follow [PSR-12](https://www.php-fig.org/psr/psr-12/).<br/>
-Requirements: PHP 8.0, Laravel 10.<br/>
-[Spatie PHP Guidelines](https://spatie.be/guidelines/php)
+The code style must follow [PSR-12](https://www.php-fig.org/psr/psr-12/). 
+
+### Class Standards
+
+By default, we don't use `final`. In our team, there aren't many benefits that `final` offers.
 
 ### Nullable and union types
 
@@ -17,6 +19,7 @@ public ?string $variable;
 ### Void return types
 
 If a method returns nothing, it should be indicated with `void`.
+This makes it clearer to users of your code what your intention was when writing it.
 
 **Prefer**
 
@@ -157,7 +160,7 @@ In most cases, this will cause the happy path to be in an unindented part of the
 
 **Prefer**
 ```php
-if (!$goodCondition) {
+if (! $goodCondition) {
   throw new Exception;
 }
 ```
@@ -204,7 +207,7 @@ $users->filter(fn(User $user): bool => $user->is_active)
         $user->update(['attribute' => 'test']);
     });
 
-collect($data)->each(function ($item) {
+collect($data$)->each(function ($item) {
     // code..
 });
 ```
@@ -223,7 +226,7 @@ public function getPage($url)
         return null;
     }
 
-    if (data_get($page, 'private', false) && !Auth::check()) {
+    if ($page['private'] && ! Auth::check()) {
         return null;
     }
 
@@ -263,6 +266,7 @@ public function rules()
 ```
 
 **data get in laravel**
+User to safe get array keys or object attributes
 ```php
 data_get($user, 'email', null);
 ```
