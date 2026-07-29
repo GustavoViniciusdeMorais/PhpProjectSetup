@@ -197,6 +197,12 @@ if (
   // do stuff
 }
 ```
+**Other option**
+```php
+return
+    DB::table('users')->where('id', $id)->first()
+    ?? new \stdClass();
+```
 
 ## Loops
 
