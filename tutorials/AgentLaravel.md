@@ -125,6 +125,41 @@ class ExampleController extends Controller
     }
 }
 ```
+### Http Resource
+```php
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ProductResource extends JsonResource
+{
+    public function toArray($request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+        ];
+    }
+}
+```
+
+### Http Collection
+```php
+use Fastdoneimex\FacilitaSystem\Http\Resources\PaginationResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Request;
+
+class ProductCollection extends ResourceCollection
+{
+    public $collects = ProductResource::class;
+
+    public function toResponse($request)
+    {
+        return array_merge(
+            ['data' => $this->collection],
+            (new PaginationResource($this->resource))->toArray($request)
+        );
+    }
+}
+```
 
 ### Querybuilder
 ```php
