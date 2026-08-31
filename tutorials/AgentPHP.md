@@ -149,6 +149,65 @@ $users = QueryBuilder::for(User::class)
     ->paginate();
 ```
 
+### Http Resource (JsonResource)
+- Transform a single model into the API response shape
+- Use `whenLoaded()` for relationships to avoid N+1 queries
+- Use `optional()->format()` for dates instead of raw access
+- Return only necessary fields — never expose secrets (tokens, passwords)
+- Keep formatting logic in small protected helper methods
+- Return type `array` on `toArray($request)`
+
+```php
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class ProductResource extends JsonResource
+{
+    public function toArray($request): array
+    {
+        return [
+            'id' => $this->id,
+            'name' => $this->name,
+            'price' => $this->price,
+            'category' => $this->whenLoaded('category', fn ($category) => [
+                'id' => $category->id,
+                'name' => $category->name,
+            ]),
+            'created_at' => optional($this->created_at)->format('Y-m-d H:i:s'),
+            'updated_at' => optional($this->updated_at)->format('Y-m-d H:i:s'),
+        ];
+    }
+}
+```
+
+### Http Collection (ResourceCollection)
+- Collects a paginator or collection into the standard API shape
+- Set `public $collects = SomeResource::class;` to map each item
+- Merge `PaginationResource` meta/links for consistent pagination
+- Use `with(Request $request)` only for extra meta (e.g., settings)
+- Override `toResponse($request)` to merge `data` + pagination
+
+```php
+use ProjectCustom\Http\Resources\PaginationResource;
+use Illuminate\Http\Resources\Json\ResourceCollection;
+use Illuminate\Http\Request;
+
+class ProductCollection extends ResourceCollection
+{
+    public $collects = ProductResource::class;
+
+    public function toResponse($request)
+    {
+        return array_merge(
+            ['data' => $this->collection],
+            (new PaginationResource($this->resource))->toArray($request)
+        );
+    }
+}
+```
+
+- Controller usage: `return new ProductCollection(GetProductsAction::run()->paginate($request->get('per_page', 15)));`
+- Folder convention: `src/Http/Resources/<Module>/Resource/ExampleResource.php` and `src/Http/Resources/<Module>/Collection/ExampleCollection.php`
+
 ### DB Transaction (multi-table writes)
 Always wrap multi-table writes in a transaction. Import `DB` facade only if not already present.
 
@@ -215,12 +274,18 @@ User::query()
 
 ## Procedure: Creating a New Feature
 
-1. **DTO** — define input shape with validation rules (`*Data.php`)
-2. **Action** — implement business logic (`*Action.php`)
-3. **Controller** — thin HTTP layer, call action, return JSON
-4. **Resource** *(optional)* — shape API output
-5. **Route** — register in `routes/api.php`
-6. **Test** — write Pest test covering happy path + error cases
+1. **Model** — Eloquent model to connect to the DB table (`*Model.php`)
+2. **DTO** — define input shape with validation rules (`*Data.php`)
+3. **Action** — implement business logic (`*Action.php`)
+4. **Controller** — thin HTTP layer, call action, return JSON
+5. **Resource** — required layer, shape a single record output (`*Resource.php`)
+6. **Collection** — required layer, shape paginated/collection output, merges `PaginationResource` (`*Collection.php`)
+7. **Route** — register in `routes/api.php`
+8. **Test** — write Pest test covering happy path + error cases
+
+Controller response flow: `Model` → `Action` (QueryBuilder/ORM) → `Collection` (wraps `Resource`) → JSON.
+
+These layers are defined by the project architect and are always required — the Resource and Collection are not optional.
 
 ---
 
