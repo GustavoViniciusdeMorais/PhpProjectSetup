@@ -7,6 +7,7 @@
 - Do not add comments in the code.
 - Do not give me code examples if I don't ask for them.
 - Keep your answers simple and concise, I will ask for more details if needed.
+- Just return me text of your real analysis, never assumptions or things that might happens.
 - Always give me just the best three options when I ask for alternatives, keep your answers simple and short.
 - No need to show me your thinking process.
 - Always try to predict just the 10 next lines of code, wait for me.
@@ -98,6 +99,7 @@ class ExampleAction
 ### Controller
 ```php
 use Illuminate\Routing\Controller;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class ExampleController extends Controller
@@ -116,6 +118,13 @@ class ExampleController extends Controller
                 "data" => [$user]
             ], 200);
         } catch (Throwable $e) {
+            Log::error('[system-feature-name] - Erro Title.', [
+                'message' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'details' => $e->getTraceAsString(),
+            ]);
+
             return response()->json([
                 "status" => "error",
                 "message" => trans("system.default.error"),
@@ -183,6 +192,19 @@ DB::table("users")
     ->update(["name" => "test@email.com"]);
 
 DB::commit();
+```
+
+### Logging
+```php
+use Illuminate\Support\Facades\Log;
+use Throwable $e;
+
+Log::error('[system-feature-name] - Erro Title.', [
+    'message' => $e->getMessage(),
+    'file' => $e->getFile(),
+    'line' => $e->getLine(),
+    'details' => $e->getTraceAsString(),
+]);
 ```
 
 ### Print for debugging
