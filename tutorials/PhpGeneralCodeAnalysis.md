@@ -21,6 +21,8 @@ Never read files freely during an analysis request. Always confirm scope first.
 3. Present the checklist to the user with the `vscode_askQuestions` tool, letting them remove, add, or confirm files.
 4. Read only the confirmed files.
 5. Proceed with the analysis using only that confirmed file set.
+6. After the analysis, ask the user if they want a code flow diagram. Never build it unasked.
+7. When confirmed, build the diagram following **Code Flow Diagram**.
 
 ### Example `vscode_askQuestions` call
 
@@ -59,6 +61,47 @@ Default answer must be short. Only expand when the user asks for more detail.
 **Best option:** <name/approach>
 **Why:** <1 line>
 **Alternatives:** <up to 2, 1 line each>
+```
+
+## Code Flow Diagram
+
+Build it only after the user confirms. Ask with:
+
+```json
+{
+  "questions": [
+    {
+      "header": "Flow Diagram",
+      "question": "Do you want a diagram of the code flow?",
+      "options": [
+        { "label": "Yes", "recommended": true },
+        { "label": "No" }
+      ]
+    }
+  ]
+}
+```
+
+### How to Build It
+
+- Use a Mermaid `flowchart TD` inside a ```mermaid block. Top-down, one node per pipeline stage.
+- Node label: `Class::method` plus the action in a few words, separated by `<br/>`.
+- Quote every label containing `\`, `::`, `(`, `)` or `/` — e.g. `A["Queues\\Push::onUser(job, data)"]`.
+- Label edges with what travels between the stages (`-->|params|`), or leave them unlabeled when the order alone is clear.
+- Decision points: rhombus `{...}` with `-- yes -->` / `-- no -->` branches. Include silent dead-ends where the code swallows an error or returns early.
+- Follow real control flow, not a file list: who calls whom, what is transformed at each hop, where it exits.
+- No invented nodes. Every node must map to code that was read.
+- Add `subgraph` only when the diagram exceeds ~10 nodes.
+- Placement in the answer: after **Summary**, before **Finding(s)**.
+
+### Reference Example
+
+```mermaid
+flowchart TD
+    A["ProductController::store(request)"] --> B["validate name, price"]
+    B --> C{"valid?"}
+    C -- no --> D["returns 422 errors"]
+    C -- yes --> E["Product::create(name, price)"]
 ```
 
 ## References
