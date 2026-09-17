@@ -1,12 +1,13 @@
 ---
 name: php-general-code-analysis
-description: 'Use when: doing a code analysis, "analyze", "analysis", "review codebase" request. Directs the agent to limit the number of files read by first listing candidate files and confirming them with the user via the ask-questions tool before reading.'
+description: 'Use when: doing a code analysis, solution search, "analyze", "analysis", "review codebase", "find a solution" request. Directs the agent to limit the number of files read by first listing candidate files and confirming them with the user via the ask-questions tool before reading, then answer short by default.'
 ---
 
 # Analysis
 
 ## When to Use
 - User asks to analyze, review, or audit code, a class, a module, or a flow
+- User asks to search/find a solution or approach for a problem
 - Any request where the scope of files to read is not explicit
 
 ## Main Directive
@@ -41,3 +42,31 @@ Never read files freely during an analysis request. Always confirm scope first.
   ]
 }
 ```
+
+## Output Format
+
+Default answer must be short. Only expand when the user asks for more detail.
+
+### Code Analysis
+```
+**Summary:** <1-2 lines, what the code does>
+**Finding(s):** <up to 3 bullets>
+**Files:** <files read>
+```
+
+### Solution Search
+```
+**Best option:** <name/approach>
+**Why:** <1 line>
+**Alternatives:** <up to 2, 1 line each>
+```
+
+## References
+
+Every answer must close with a `References` line citing where the conclusion came from (official docs, RFCs, PSR specs, books). Max 2 links.
+
+```
+**References:** <name> — <link>
+```
+
+End every short answer with: "Ask for more detail if needed."
