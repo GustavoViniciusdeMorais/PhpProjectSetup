@@ -6,6 +6,12 @@ argument-hint: 'Describe what you want to create or review (e.g., "CreateUserAct
 
 # PHP Coding Skill — Laravel 10 / PHP 8
 
+## Mandatory: Follow the Agent Rules
+
+Always read and follow [`../../copilot-instructions.md`](../../copilot-instructions.md) before creating, refactoring, or reviewing any PHP code.
+
+Concretely, this covers the agent rules on: no comments in code, database messages in Brazilian Portuguese, transaction control for multi-table updates, `vscode_askQuestions`-driven pair programming, building only the main class/function structure, and never running terminal commands.
+
 ## When to Use
 - Creating or refactoring Controllers, Actions, DTOs, Models, Resources, Migrations
 - Reviewing PHP code for standards compliance
