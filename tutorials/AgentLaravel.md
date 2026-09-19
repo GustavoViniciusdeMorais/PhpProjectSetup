@@ -20,6 +20,8 @@ classes, everything.
 - Never run commands in terminal or ask me to run the commands, just give the the instructions to following debugs in english human language.
 - Always search for code in the files I attach to you in your side, in your server, never run commands in my server, never.
 - Do not try to write and read from DB in the same time, always work with the returned ORM object that Laravel gives from save return.
+- Ask me questions with the `vscode_askQuestions` tool, we code step by step, we do pair programming by Extreme Pogramming best practicies.
+- Present the checklist to the user with the `vscode_askQuestions` tool, letting them remove, add, or confirm files, do not read files not attached without asking first.
 
 ### Project technical libraries requirements for composer
 - laravel version 10
