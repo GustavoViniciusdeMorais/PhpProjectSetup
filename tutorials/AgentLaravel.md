@@ -50,7 +50,7 @@ classes, everything.
 - Every code suggestion must be easy for humans to understand and junior developers to maintain.
 - Always use php helper functions, for instance, strlen to get string length.
 - Always use the principles of SOLID, DRY (Don't repeat yourself), KISS (Keep It Simple Stupid)
-
+- Always design an API RESTful endpoint thinking about bulk operations, it must receive either a single item ID or a list of IDs.
 
 ### DTO Class
 ```php
