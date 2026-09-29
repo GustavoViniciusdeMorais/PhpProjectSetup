@@ -9,6 +9,8 @@ php -r "print_r(strlen('linux'));" && echo ""
 ### Usefull
 ```php
 print_r(json_encode(['data'=>'linux']));echo "\n\n";exit;
+// generate random hash
+echo bin2hex(random_bytes(50));
 ```
 ```php
 $endpoint = "resource/{id}";
