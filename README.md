@@ -1,4 +1,4 @@
-# GeoBash
+# Skeleton
 
 ```bash
 service nginx start

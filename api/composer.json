@@ -1,5 +1,5 @@
 {
-    "name": "geobash/geobash",
+    "name": "gustavomorais/skeleton",
     "type": "project",
     "require": {
         "php": "^8.1",
