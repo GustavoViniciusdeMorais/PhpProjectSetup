@@ -1,6 +1,11 @@
 {
     "name": "geobash/geobash",
     "type": "project",
+    "autoload": {
+        "psr-4": {
+            "Gustavomorais\\Geobash\\": "src/"
+        }
+    },
     "require": {
         "php": "^8.1",
         "slim/slim": "^4",

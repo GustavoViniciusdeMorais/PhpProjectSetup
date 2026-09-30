@@ -1,5 +1,14 @@
 <?php
 
-print_r(json_encode(['sadfasdf']));
-echo "\n\n";
-exit;
+use Psr\Http\Message\ResponseInterface as Response;
+use Psr\Http\Message\ServerRequestInterface as Request;
+use Gustavomorais\Geobash\MainController;
+use Slim\Factory\AppFactory;
+
+require __DIR__ . '/vendor/autoload.php';
+
+$app = AppFactory::create();
+
+$app->get('/', [MainController::class, 'index']);
+
+$app->run();

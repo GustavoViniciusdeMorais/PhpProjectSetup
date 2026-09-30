@@ -2,3 +2,4 @@ vendor
 data
 dockerDBData
 composer.lock
+.github
