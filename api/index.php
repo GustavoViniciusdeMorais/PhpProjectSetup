@@ -10,5 +10,6 @@ require __DIR__ . '/vendor/autoload.php';
 $app = AppFactory::create();
 
 $app->get('/', [MainController::class, 'index']);
+$app->get('/dashboard', [MainController::class, 'dashboard']);
 
 $app->run();
