@@ -4,7 +4,7 @@ namespace Gustavomorais\Geobash;
 
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Gustavomorais\Geobash\TemplateRenderer;
+use Slim\Views\Twig;
 
 class MainController
 {
@@ -21,10 +21,8 @@ class MainController
 
     public function dashboard(Request $request, Response $response): Response
     {
-        $renderer = new TemplateRenderer();
+        $twig = Twig::fromRequest($request);
 
-        $response->getBody()->write($renderer->render('dashboard'));
-
-        return $response->withHeader('Content-Type', 'text/html');
+        return $twig->render($response, 'dashboard.twig');
     }
 }

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeoBash</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #1f2937;
+            background-color: #f3f4f6;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 220px;
+            padding: 24px 16px;
+            background-color: #111827;
+            color: #ffffff;
+        }
+
+        .sidebar h2 {
+            margin: 0 0 24px;
+            font-size: 18px;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .sidebar a {
+            padding: 8px 12px;
+            border-radius: 6px;
+            color: #d1d5db;
+            text-decoration: none;
+        }
+
+        .sidebar a.active,
+        .sidebar a:hover {
+            background-color: #1f2937;
+            color: #ffffff;
+        }
+
+        .content {
+            flex: 1;
+            padding: 24px;
+        }
+
+        .content h1 {
+            margin: 0 0 24px;
+            font-size: 22px;
+        }
+
+        .cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .card {
+            min-width: 200px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background-color: #ffffff;
+        }
+
+        .card h3 {
+            margin: 0 0 8px;
+            font-size: 14px;
+            color: #6b7280;
+        }
+
+        .card .value {
+            margin: 0;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .card .caption {
+            margin: 8px 0 0;
+            font-size: 12px;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <h2>GeoBash</h2>
+            <nav>
+                <a href="/" class="active">Dashboard</a>
+                <a href="/cotacoes">Cotações</a>
+                <a href="/configuracoes">Configurações</a>
+            </nav>
+        </aside>
+
+        <main class="content">
+            <h1>Dashboard</h1>
+
+            <section class="cards">
+                <article class="card">
+                    <h3>Dólar</h3>
+                    <p class="value">R$ 0,00</p>
+                    <p class="caption">Cotação atual</p>
+                </article>
+
+                <article class="card">
+                    <h3>Petróleo</h3>
+                    <p class="value">US$ 0,00</p>
+                    <p class="caption">Preço do barril</p>
+                </article>
+            </section>
+        </main>
+    </div>
+</body>
+</html>
