@@ -1,6 +1,6 @@
 <?php
 
-use Gustavomorais\Geobash\MainController;
+use Gustavomorais\Geobash\Http\Controllers\MainController;
 use Slim\Factory\AppFactory;
 use Slim\Views\Twig;
 use Slim\Views\TwigMiddleware;

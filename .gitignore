@@ -3,3 +3,4 @@ data
 dockerDBData
 composer.lock
 .github
+*.logs
