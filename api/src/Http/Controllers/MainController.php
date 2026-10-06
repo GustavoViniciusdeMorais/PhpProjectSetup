@@ -13,8 +13,7 @@ use Throwable;
 
 class MainController
 {
-    public function __construct(
-    ) {}
+    public function __construct() {}
 
     public function index(Request $request, Response $response): Response
     {
@@ -61,9 +60,17 @@ class MainController
     private function resolveDollarValue(): string
     {
         try {
-            $today = (new DateTimeImmutable('26-09-2026', new DateTimeZone('America/Sao_Paulo')))->format('m-d-Y');
+            $previousDay = (new DateTimeImmutable('now', new DateTimeZone('America/Sao_Paulo')))->modify('-1 day');
 
-            return (new BancoCentralApi())->getDollarValue('09-22-2026', '09-22-2026') ?: '—';
+            $offset = match ((int) $previousDay->format('N')) {
+                6 => '-1 day',
+                7 => '-2 days',
+                default => '0 days',
+            };
+
+            $referenceDate = $previousDay->modify($offset)->format('m-d-Y');
+
+            return (new BancoCentralApi())->getDollarValue($referenceDate, $referenceDate) ?: '—';
         } catch (Throwable $e) {
             (new Logger())->write('dashboard', [
                 'message' => $e->getMessage(),
