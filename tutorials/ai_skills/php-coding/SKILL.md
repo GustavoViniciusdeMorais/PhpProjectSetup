@@ -57,181 +57,20 @@ Concretely, this covers the agent rules on: no comments in code, database messag
 
 ## Architecture Patterns
 
-### Controller
-- Thin controller — no business logic
-- Use `try/catch` with `Throwable`
-- Return JSON with `status`, `message`, `data`
-- Use `findOrFail` for single-record lookups
+The layer contracts, class templates and the request flow are the single source of truth in the [PHP Architecture](../php-architecture/SKILL.md) skill. Summary of ownership:
 
-```php
-use Illuminate\Routing\Controller;
-use Illuminate\Http\JsonResponse
-use Throwable;
+| Layer | Owns | Never owns |
+|---|---|---|
+| Controller | HTTP boundary, status code, envelope, logging | business rules, queries, formatting |
+| DTO | input shape + validation rules | persistence, HTTP |
+| Action | use case, transactions, jobs, queries | HTTP responses |
+| Model / QueryBuilder | relations, casts, scopes, reads | HTTP, request input |
+| Resource | single-record output shape | secrets, raw internal JSON |
+| Collection | paginated shape + `PaginationResource` | business rules |
 
-class ExampleController extends Controller
-{
-    public function show(int $id): JsonResponse
-    {
-        try {
-            $record = SomeModel::findOrFail($id);
+Folder convention: `src/Actions/<Module>/*Action.php`, `src/Data/<Module>/*Data.php`, `src/Http/Resources/<Module>/Resource/*Resource.php` and `src/Http/Resources/<Module>/Collection/*Collection.php`.
 
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Operação realizada com sucesso.',
-                'data'    => [$record],
-            ], 200);
-        } catch (Throwable $e) {
-            return response()->json([
-                'status'  => 'error',
-                'message' => trans('system.default.error'),
-                'data'    => [],
-            ], 500);
-        }
-    }
-}
-```
-
-### DTO (Spatie Laravel Data)
-- Use `public` constructor property promotion
-- Define `rules()` returning validation array
-- Define `messages()` with PT-BR messages
-
-```php
-use Spatie\LaravelData\Data;
-use Spatie\LaravelData\Support\Validation\ValidationContext;
-
-class CreateUserData extends Data
-{
-    public function __construct(
-        public string $name,
-        public string $email,
-    ) {}
-
-    public static function rules(ValidationContext $context): array
-    {
-        return [
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email'],
-        ];
-    }
-
-    public static function messages(...$args): array
-    {
-        return [
-            'name.required'  => 'O nome é obrigatório.',
-            'email.required' => 'O e-mail é obrigatório.',
-        ];
-    }
-}
-```
-
-### Action (Lorisleiva)
-- Single `handle()` public method
-- Call via `ActionClass::run($data)`
-- No HTTP logic inside actions
-
-```php
-use Lorisleiva\Actions\Concerns\AsAction;
-
-class CreateUserAction
-{
-    use AsAction;
-
-    public function handle(CreateUserData $data): User
-    {
-        return User::create($data->toArray());
-    }
-}
-```
-
-### QueryBuilder (Spatie)
-```php
-use Spatie\QueryBuilder\QueryBuilder;
-
-$users = QueryBuilder::for(User::class)
-    ->allowedFields(['id', 'name', 'email'])
-    ->allowedFilters(['name', 'email'])
-    ->allowedIncludes(['posts'])
-    ->paginate();
-```
-
-### Http Resource (JsonResource)
-- Transform a single model into the API response shape
-- Use `whenLoaded()` for relationships to avoid N+1 queries
-- Use `optional()->format()` for dates instead of raw access
-- Return only necessary fields — never expose secrets (tokens, passwords)
-- Keep formatting logic in small protected helper methods
-- Return type `array` on `toArray($request)`
-
-```php
-use Illuminate\Http\Resources\Json\JsonResource;
-
-class ProductResource extends JsonResource
-{
-    public function toArray($request): array
-    {
-        return [
-            'id' => $this->id,
-            'name' => $this->name,
-            'price' => $this->price,
-            'category' => $this->whenLoaded('category', fn ($category) => [
-                'id' => $category->id,
-                'name' => $category->name,
-            ]),
-            'created_at' => optional($this->created_at)->format('Y-m-d H:i:s'),
-            'updated_at' => optional($this->updated_at)->format('Y-m-d H:i:s'),
-        ];
-    }
-}
-```
-
-### Http Collection (ResourceCollection)
-- Collects a paginator or collection into the standard API shape
-- Set `public $collects = SomeResource::class;` to map each item
-- Merge `PaginationResource` meta/links for consistent pagination
-- Use `with(Request $request)` only for extra meta (e.g., settings)
-- Override `toResponse($request)` to merge `data` + pagination
-
-```php
-use ProjectCustom\Http\Resources\PaginationResource;
-use Illuminate\Http\Resources\Json\ResourceCollection;
-use Illuminate\Http\Request;
-
-class ProductCollection extends ResourceCollection
-{
-    public $collects = ProductResource::class;
-
-    public function toResponse($request)
-    {
-        return array_merge(
-            ['data' => $this->collection],
-            (new PaginationResource($this->resource))->toArray($request)
-        );
-    }
-}
-```
-
-- Controller usage: `return new ProductCollection(GetProductsAction::run()->paginate($request->get('per_page', 15)));`
-- Folder convention: `src/Http/Resources/<Module>/Resource/ExampleResource.php` and `src/Http/Resources/<Module>/Collection/ExampleCollection.php`
-
-### DB Transaction (multi-table writes)
-Always wrap multi-table writes in a transaction. Import `DB` facade only if not already present.
-
-```php
-use Illuminate\Support\Facades\DB;
-
-DB::beginTransaction();
-
-try {
-    User::where('id', $id)->update(['name' => $name]);
-    Profile::where('user_id', $id)->update(['bio' => $bio]);
-
-    DB::commit();
-} catch (Throwable $e) {
-    DB::rollBack();
-    throw $e;
-}
-```
+Load the [PHP Architecture](../php-architecture/SKILL.md) skill for the code templates, the Model → DTO → Action → Controller → Resource → Collection → Route flow, and the transaction rules.
 
 ---
 
@@ -280,22 +119,16 @@ User::query()
 
 ## Procedure: Creating a New Feature
 
-1. **Model** — Eloquent model to connect to the DB table (`*Model.php`)
-2. **DTO** — define input shape with validation rules (`*Data.php`)
-3. **Action** — implement business logic (`*Action.php`)
-4. **Controller** — thin HTTP layer, call action, return JSON
-5. **Resource** — required layer, shape a single record output (`*Resource.php`)
-6. **Collection** — required layer, shape paginated/collection output, merges `PaginationResource` (`*Collection.php`)
-7. **Route** — register in `routes/api.php`
-8. **Test** — write Pest test covering happy path + error cases
+Follow the layered procedure in the [PHP Architecture](../php-architecture/SKILL.md) skill: Model → Migration → DTO → Action → Controller → Resource → Collection → Route → Test.
 
 Controller response flow: `Model` → `Action` (QueryBuilder/ORM) → `Collection` (wraps `Resource`) → JSON.
 
-These layers are defined by the project architect and are always required — the Resource and Collection are not optional.
+The Resource and Collection layers are defined by the project architect and are never optional.
 
 ---
 
 ## References
 - [Agent Instructions](../../copilot-instructions.md) — **mandatory, always apply first**
+- [PHP Architecture](../php-architecture/SKILL.md) — layer contracts, templates and request flow
 - [PHP Coding Standards](../../php_coding_standards.md)
 - [Task Report Instructions](../../task-report-instructions.md)
