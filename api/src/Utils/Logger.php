@@ -15,6 +15,16 @@ class Logger
     {
         $entry = "[{$title}] - " . json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) . PHP_EOL;
 
-        file_put_contents($this->logFile, $entry, FILE_APPEND | LOCK_EX);
+        $directory = dirname($this->logFile);
+
+        if (! is_dir($directory)) {
+            mkdir($directory, 0775, true);
+        }
+
+        $written = file_put_contents($this->logFile, $entry, FILE_APPEND | LOCK_EX);
+
+        if ($written === false) {
+            file_put_contents('php://stderr', $entry);
+        }
     }
 }
