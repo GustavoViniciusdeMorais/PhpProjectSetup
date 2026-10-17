@@ -4,5 +4,6 @@ dockerDBData
 composer.lock
 .github
 *.logs
+*logs*
 *.env*
 *database
