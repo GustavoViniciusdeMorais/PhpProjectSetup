@@ -8,6 +8,7 @@
 - [Cognitive Complexity](./tutorials/cognitive_complexity.md)
 - [Value Object](./tutorials/ValueObject.md)
 - [Server Session](./tutorials/serverSession.md)
+- [Php Owasp Top 10](./tutorials/PhpOwaspTop10.md)
 - [Infrastructure](./infrastructure/main.md)
 - [PHP ML](./tutorials/php_ml.md)
 - [Enum example](./tutorials/enum.md)
