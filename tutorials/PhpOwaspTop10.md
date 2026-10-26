@@ -62,3 +62,14 @@ composer audit
 composer require enlightn/security-checker
 php security-checker security:check /path/to/composer.lock
 ```
+### A06 - Vulnerable and Outdated Components
+- Use composer audit command to check the packages
+##### **Correct apporach:**
+```bash
+which composer
+rm -f /usr/bin/composer
+# Get composer install commands, then transfer phar file
+mv composer.phar /usr/local/bin/composer
+# Audit packages to see the CVE
+composer audit -n
+```
