@@ -59,8 +59,12 @@ error_reporting = E_ALL
 ```bash
 apt search gobuster
 composer audit
-composer require enlightn/security-checker
-php security-checker security:check /path/to/composer.lock
+composer require enlightn/security-checker -n
+
+# where it is? usually in vendor/bin
+find vendor/* -type f -regex ".*securi.*"
+
+php vendor/bin/security-checker security:check composer.lock
 ```
 ### A06 - Vulnerable and Outdated Components
 - Use composer audit command to check the packages
