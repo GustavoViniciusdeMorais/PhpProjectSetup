@@ -73,3 +73,20 @@ mv composer.phar /usr/local/bin/composer
 # Audit packages to see the CVE
 composer audit -n
 ```
+### A07 - Identification and Authentication Failures
+- Always restart the session data.
+- Always set session expiration date, httponly, same site strict
+```php
+session_regenerate_id(true);
+$_SESSION['user_id'] = $user['id'];
+$_SESSION['created_at'] = time();
+
+session_set_cookie_params([
+    'lifetime' => 300,
+    'path' => '/',
+    'domain' => $_SERVER['HTTP_HOST'],
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Strict'
+]);
+```
