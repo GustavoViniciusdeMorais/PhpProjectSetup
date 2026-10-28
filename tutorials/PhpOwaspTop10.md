@@ -80,6 +80,7 @@ composer audit -n
 ### A07 - Identification and Authentication Failures
 - Always restart the session data.
 - Always set session expiration date, httponly, same site strict
+##### **Correct apporach:**
 ```php
 session_regenerate_id(true);
 $_SESSION['user_id'] = $user['id'];
@@ -93,4 +94,14 @@ session_set_cookie_params([
     'httponly' => true,
     'samesite' => 'Strict'
 ]);
+```
+### A08 — Software and Data Integrity Failures
+- Validate all data integrity
+- Do not save or read php classes from session cookies
+##### **Correct apporach:**
+```php
+$user_prefs = [];
+$prefs_json = json_encode($user_prefs);
+$prefs_array = json_decode($prefs_json, true);
+$obj = unserialize('', ['allowed_classes' => false]);
 ```
